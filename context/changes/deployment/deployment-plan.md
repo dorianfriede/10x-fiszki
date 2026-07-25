@@ -67,8 +67,10 @@ Local `supabase start` (Docker-based, `http://127.0.0.1:54321`) is dev-only and 
 - [x] Do **not** push `SUPABASE_URL`/`SUPABASE_KEY` as Worker secrets from this job on every run — they're already set once via `wrangler secret put` in Phase 2 and don't need to be re-set per deploy (avoids putting secret values through CI logs/diffs unnecessarily). Confirmed: `deploy` job only runs `wrangler deploy` (via wrangler-action), no `secret put` step added.
 
 ## Phase 5 — Post-CI verification
-- [ ] Push a trivial no-op commit to `master` (or merge a small real PR) and confirm the new `deploy` job runs, succeeds, and the live URL reflects the change.
-- [ ] Re-run the manual auth smoke test (sign-in/up/out) against production once more after the first CI-driven deploy specifically, to confirm parity with the Phase 2 manual deploy — the risk register in `infrastructure.md` flags local/prod parity risk (`workerd`'s fetch/TLS behavior toward Supabase may not reproduce identically between `wrangler dev` and the real edge network).
+- [x] Push a trivial no-op commit to `master` (or merge a small real PR) and confirm the new `deploy` job runs, succeeds, and the live URL reflects the change. Done via the Phase 4 commit itself (pushed to `main`, the repo's actual branch — see Phase 4 correction). First-ever CI run on this repo: `ci` job passed, `deploy` job succeeded, new Worker Version `6762e85d-d293-45cb-8bc1-5344e4612689` live.
+- [x] Re-run the manual auth smoke test (sign-in/up/out) against production once more after the first CI-driven deploy specifically, to confirm parity with the Phase 2 manual deploy — the risk register in `infrastructure.md` flags local/prod parity risk (`workerd`'s fetch/TLS behavior toward Supabase may not reproduce identically between `wrangler dev` and the real edge network). Confirmed via curl: sign-up (302 → confirm-email), sign-in (302 → `/` with cookie), sign-out (302 → `/`, cookie cleared) — all pass, matching Phase 2 manual-deploy results.
+
+**All phases complete.** See the Verification checklist below — all items now hold.
 
 ## Edge cases / support steps to document (not blocking, but keep visible)
 
