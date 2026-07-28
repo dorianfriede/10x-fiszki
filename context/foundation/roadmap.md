@@ -1,0 +1,168 @@
+---
+project: "10xFiszki"
+version: 1
+status: draft
+created: 2026-07-28
+updated: 2026-07-28
+prd_version: 1
+main_goal: speed
+top_blocker: time
+---
+
+# Roadmap: 10xFiszki
+
+> Derived from `context/foundation/prd.md` (v1) + auto-researched codebase baseline.
+> Edit-in-place; archive when superseded.
+> Slices below are listed in dependency order. The "At a glance" table is the index.
+
+## Vision recap
+
+Manual flashcard creation is slow enough that people abandon spaced repetition entirely, even though they know it works. 10xFiszki lets a user paste any text and get an AI-generated deck of flashcards in seconds instead of hours, with a review step (accept/reject each proposal) before anything lands in their deck. Manual card creation stays available as a fallback for cases the AI misses.
+
+## North star
+
+**S-02: User pastes text, gets AI-generated flashcard proposals for a deck, and accepts or rejects each before they're saved** — this is the *north star*: the smallest end-to-end flow whose success proves the product works, here meaning whether AI-generated cards clear the 75% acceptance bar that the whole product's value proposition rests on. Everything else only matters if this works, so it's sequenced as early as its prerequisites (F-01, S-01) allow.
+
+## At a glance
+
+| ID   | Change ID                          | Outcome (user can …)                                              | Prerequisites | PRD refs               | Status  |
+| ---- | ----------------------------------- | ------------------------------------------------------------------ | -------------- | ----------------------- | ------- |
+| F-01 | `deck-card-schema-foundation`       | (foundation) decks/cards schema + row-level isolation exist        | —               | NFR (data isolation), Access Control | ready |
+| S-01 | `deck-management`                   | create, view, and delete a named deck                              | F-01            | FR-004, FR-005, FR-006  | proposed |
+| S-02 | `ai-generated-flashcard-review`     | paste text, get AI-generated cards, accept/reject each into a deck | F-01, S-01      | US-01, FR-007, FR-008   | proposed |
+| S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | proposed |
+| S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | proposed |
+| S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | blocked |
+
+## Streams
+
+Navigation aid — groups items that share a prerequisites chain. Canonical ordering still lives in the dependency graph below; this table is the proposed reading order across parallel tracks.
+
+| Stream | Theme                        | Chain                        | Note                                                                 |
+| ------ | ----------------------------- | ----------------------------- | --------------------------------------------------------------------- |
+| A      | Data foundation & generation loop | `F-01` → `S-01` → `S-02`     | Carries the north star; sequenced first under the speed priority.     |
+| B      | Manual entry & card curation  | `S-03` / `S-04`                | Both join Stream A at `S-01`; independent of AI generation, so they can run in parallel with S-02. |
+| C      | Review & scheduling            | `S-05`                          | Joins Stream A at `S-01`; blocked on the third-party SRS choice (Open Roadmap Question), not on schedule pressure. |
+
+## Baseline
+
+What's already in place in the codebase as of `2026-07-28` (auto-researched + user-confirmed).
+Foundations below assume these are present and do NOT re-scaffold them.
+
+- **Frontend:** partial — Astro 6 + React wired (`astro.config.mjs`), Tailwind/shadcn primitives; real auth pages/components exist (`src/pages/auth/*`, `src/components/auth/*`), no deck/card/review UI yet.
+- **Backend / API:** partial — Astro SSR (`output: "server"`) with Cloudflare adapter wired; only `src/pages/api/auth/*` routes exist — no deck/card/AI-generation/review routes.
+- **Data:** partial — Supabase client wired (`src/lib/supabase.ts`), but no schema/migrations and no tables (decks, cards, reviews) exist anywhere. This gap is what F-01 closes.
+- **Auth:** present — Supabase Auth, `src/middleware.ts` session check + `PROTECTED_ROUTES`, signin/signup/signout API routes and forms. **This already satisfies FR-001, FR-002, FR-003 (must-have) in full — no roadmap item is created for auth; it is not re-scaffolded and is not a blocker for any slice below.**
+- **Deploy / infra:** present — `wrangler.jsonc`, `@astrojs/cloudflare`, CI `deploy` job in `.github/workflows/ci.yml` gated on push to `main`.
+- **Observability:** partial — only Cloudflare's platform-level `observability.enabled: true` flag; no application-level logging/error tracking. Not promoted to a Foundation — given the speed priority and the 13-day window to the hard deadline, this is intentionally deferred (see `## Parked`).
+
+## Foundations
+
+### F-01: Decks/cards schema and row-level isolation
+
+- **Outcome:** (foundation) A Supabase Postgres schema for `decks` and `cards` exists with migrations, and row-level security policies guarantee a user can only read/write their own rows.
+- **Change ID:** `deck-card-schema-foundation`
+- **PRD refs:** NFR ("No user's cards, decks, or review history are accessible to any other user under any circumstances"), Access Control section
+- **Unlocks:** S-01, S-02 (north star), S-03, S-04, S-05 — every slice needs a persisted deck/card to exist before it can do anything real.
+- **Prerequisites:** —
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** — (PRD Open Question #3, deck deletion behavior, resolved during roadmap generation: deleting a deck cascade-deletes its cards and their SRS scheduling state. The cards table's foreign key should be defined accordingly.)
+- **Risk:** Every downstream slice needs this schema to persist real data — sequencing it first avoids retrofitting isolation policies after slices are already built against an ad-hoc shape.
+- **Status:** ready
+
+## Slices
+
+### S-01: User can create, view, and delete decks
+
+- **Outcome:** user can create a named deck, see a list of their decks, and delete a deck.
+- **Change ID:** `deck-management`
+- **PRD refs:** FR-004, FR-005, FR-006
+- **Prerequisites:** F-01
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Every other slice needs a deck to target (generate into, add cards to, review). Sequenced immediately after F-01 so the north star (S-02) isn't waiting on anything avoidable.
+- **Status:** proposed
+
+### S-02: User pastes text, generates AI flashcards, and accepts/rejects each into a deck
+
+- **Outcome:** user can paste study text, trigger AI generation for a selected deck, see generated card proposals, and accept or reject each before it's saved.
+- **Change ID:** `ai-generated-flashcard-review`
+- **PRD refs:** US-01, FR-007, FR-008
+- **Prerequisites:** F-01, S-01
+- **Parallel with:** S-03, S-04, S-05
+- **Blockers:** —
+- **Unknowns:**
+  - AI generation prompt design (PRD Open Question #2): what instructions produce a 75%+ acceptance rate? Owner: user. Block: no (FR-007 is correct as-is; prompt design is an implementation-time iteration, not a planning blocker).
+- **Risk:** This is the north star — the core hypothesis test (does AI-generated quality clear the 75% acceptance bar). Placed as early as F-01/S-01 allow rather than deferred for symmetric ordering, since under the speed priority nothing else matters if this doesn't work.
+- **Status:** proposed
+
+### S-03: User can manually create a flashcard in a deck
+
+- **Outcome:** user can manually create a flashcard (front and back) within a deck.
+- **Change ID:** `manual-flashcard-creation`
+- **PRD refs:** FR-009
+- **Prerequisites:** F-01, S-01
+- **Parallel with:** S-02, S-04, S-05
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Fully independent of AI generation — can be built in parallel with S-02 with no contention, and doubles as a fallback path if AI quality is initially disappointing.
+- **Status:** proposed
+
+### S-04: User can browse, edit, and delete cards in a deck
+
+- **Outcome:** user can browse all cards in a deck, edit a card's front/back, and delete a card.
+- **Change ID:** `card-browsing-and-editing`
+- **PRD refs:** FR-010, FR-011, FR-012
+- **Prerequisites:** F-01, S-01
+- **Parallel with:** S-02, S-03, S-05
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Only needs the schema and a deck to exist, not a specific card-creation path — can proceed in parallel with S-02/S-03 rather than waiting for either to finish.
+- **Status:** proposed
+
+### S-05: User can run a spaced-repetition review session
+
+- **Outcome:** user can start a review session for a deck and rate their recall on each card; scheduling itself is delegated to a third-party SRS service.
+- **Change ID:** `spaced-repetition-review-session`
+- **PRD refs:** FR-013, FR-014
+- **Prerequisites:** F-01, S-01
+- **Parallel with:** S-02, S-03, S-04
+- **Blockers:** —
+- **Unknowns:**
+  - Which third-party SRS service? (PRD Open Question #1) The rating scale (1-4, again/hard/good/easy, etc.) is API-contract-specific, and FR-014's review UI can't be finalized until this is picked. Owner: user. Block: yes.
+- **Risk:** Genuinely blocked on an external decision the team can't resolve unilaterally. Sequenced last so it doesn't stall the other four slices, which can all proceed without it.
+- **Status:** blocked
+
+## Backlog Handoff
+
+| Roadmap ID | Change ID                          | Suggested issue title                                          | Ready for `/10x-plan` | Notes |
+| ---------- | ------------------------------------ | ----------------------------------------------------------------- | ----------------------- | ----- |
+| F-01       | `deck-card-schema-foundation`        | Design decks/cards schema with row-level isolation                 | yes                     | Run `/10x-plan deck-card-schema-foundation` — deck-deletion behavior resolved (cascade delete) |
+| S-01       | `deck-management`                    | Deck create/view/delete                                             | no                      | Waiting on F-01 |
+| S-02       | `ai-generated-flashcard-review`      | AI flashcard generation with per-card accept/reject (north star)    | no                      | Waiting on F-01, S-01 |
+| S-03       | `manual-flashcard-creation`          | Manual flashcard creation                                            | no                      | Waiting on F-01, S-01 |
+| S-04       | `card-browsing-and-editing`          | Card browse/edit/delete                                              | no                      | Waiting on F-01, S-01 |
+| S-05       | `spaced-repetition-review-session`   | Spaced-repetition review session                                     | no                      | Blocked on SRS service selection (see Unknowns) |
+
+## Open Roadmap Questions
+
+None currently open at the cross-cutting level — all three of the PRD's `## Open Questions` map cleanly to a single roadmap item's Unknowns rather than spanning multiple slices:
+
+1. ~~Deck deletion behavior (cascade vs. archive)~~ → resolved during roadmap generation (2026-07-28): cascade delete. Was embedded in **F-01**'s Unknowns; F-01 is now unblocked (`Status: ready`).
+2. AI generation prompt design → embedded in **S-02**'s Unknowns. Owner: user. Block: no.
+3. Which third-party SRS service → embedded in **S-05**'s Unknowns. Owner: user. Block: yes (gates S-05).
+
+## Parked
+
+- **Custom SRS algorithm (SM-2, FSRS, or equivalent).** Why parked: PRD Non-Goals — scheduling is fully delegated to a third-party SRS service; building and tuning a scheduling algorithm is a separate domain problem.
+- **File import (PDF, DOCX, image, URL parsing).** Why parked: PRD Non-Goals — v1 is paste-only; scope containment.
+- **Sharing or collaborative features (public decks, shared collections, team workspaces).** Why parked: PRD Non-Goals — single-user-per-account MVP; multi-user coordination is a separate product surface.
+- **Mobile app or mobile-optimized experience.** Why parked: PRD Non-Goals — desktop browsers only for the MVP.
+- **Integrations with external learning platforms (LMS, Notion, etc.).** Why parked: PRD Non-Goals — integration development adds scope before the product's core value (AI-generated cards people actually accept) is proven with real users.
+- **Application-level observability (error tracking, structured logging, dashboards beyond Cloudflare's built-in flag).** Why parked: not required by any must-have FR or NFR, and the 13-day window to the hard deadline (`2026-08-10`) doesn't leave room for it under the speed priority. Platform-level Cloudflare observability (already present) is the floor for launch.
+
+## Done
+
+(Empty on first generation. `/10x-archive` appends an entry here — and flips that item's `Status` to `done` — when a change whose `Change ID` matches the item is archived.)
