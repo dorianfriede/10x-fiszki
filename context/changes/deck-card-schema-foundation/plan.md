@@ -204,19 +204,19 @@ This is a net-new schema with no existing data to migrate. Future schema changes
 
 #### Automated
 
-- [ ] 1.1 Migration file is valid SQL and applies without error locally: `supabase db reset`
-- [x] 1.2 No lint errors introduced: `npm run lint`
+- [x] 1.1 Migration file is valid SQL and applies without error locally: `supabase db reset` (adapted: validated via `supabase db push` against the linked cloud project instead, since Docker is unavailable locally — see 2.1)
+- [x] 1.2 No lint errors introduced: `npm run lint` — 4af6956
 
 #### Manual
 
-- [x] 1.3 Migration file reviewed for correct cascade behavior, constraint logic, and RLS policy conditions
+- [x] 1.3 Migration file reviewed for correct cascade behavior, constraint logic, and RLS policy conditions — 4af6956
 
 ### Phase 2: Apply & verify isolation
 
 #### Manual
 
-- [ ] 2.1 `supabase db push` completes successfully against the linked cloud project
-- [ ] 2.2 Running `verify-rls-isolation.sql` shows every cross-user access attempt returns 0 rows, and the owning user's own access succeeds normally
+- [x] 2.1 `supabase db push` completes successfully against the linked cloud project
+- [x] 2.2 Running `verify-rls-isolation.sql` shows every cross-user access attempt returns 0 rows, and the owning user's own access succeeds normally
 
 ### Phase 3: Generate types & wire client
 
