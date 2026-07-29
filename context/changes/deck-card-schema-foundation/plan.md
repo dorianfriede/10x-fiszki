@@ -222,9 +222,9 @@ This is a net-new schema with no existing data to migrate. Future schema changes
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npx astro check`
-- [x] 3.2 Build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check` — 2f5fcf6
+- [x] 3.2 Build succeeds: `npm run build` — 2f5fcf6
 
 #### Manual
 
-- [x] 3.3 Spot-check `src/db/database.types.ts` contains `decks` and `cards` table types with the expected columns
+- [x] 3.3 Spot-check `src/db/database.types.ts` contains `decks` and `cards` table types with the expected columns — 2f5fcf6
