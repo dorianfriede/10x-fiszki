@@ -204,7 +204,7 @@ This is a net-new schema with no existing data to migrate. Future schema changes
 
 #### Automated
 
-- [x] 1.1 Migration file is valid SQL and applies without error locally: `supabase db reset` (adapted: validated via `supabase db push` against the linked cloud project instead, since Docker is unavailable locally — see 2.1)
+- [x] 1.1 Migration file is valid SQL and applies without error locally: `supabase db reset` (adapted: validated via `supabase db push` against the linked cloud project instead, since Docker is unavailable locally — see 2.1) — 3784d32
 - [x] 1.2 No lint errors introduced: `npm run lint` — 4af6956
 
 #### Manual
@@ -215,16 +215,16 @@ This is a net-new schema with no existing data to migrate. Future schema changes
 
 #### Manual
 
-- [x] 2.1 `supabase db push` completes successfully against the linked cloud project
-- [x] 2.2 Running `verify-rls-isolation.sql` shows every cross-user access attempt returns 0 rows, and the owning user's own access succeeds normally
+- [x] 2.1 `supabase db push` completes successfully against the linked cloud project — 3784d32
+- [x] 2.2 Running `verify-rls-isolation.sql` shows every cross-user access attempt returns 0 rows, and the owning user's own access succeeds normally — 3784d32
 
 ### Phase 3: Generate types & wire client
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npx astro check`
-- [ ] 3.2 Build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check`
+- [x] 3.2 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 3.3 Spot-check `src/db/database.types.ts` contains `decks` and `cards` table types with the expected columns
+- [x] 3.3 Spot-check `src/db/database.types.ts` contains `decks` and `cards` table types with the expected columns
