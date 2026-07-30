@@ -1,9 +1,9 @@
 ---
 change_id: deck-card-schema-foundation
 title: Decks/cards schema and row-level isolation
-status: implemented
+status: impl_reviewed
 created: 2026-07-29
-updated: 2026-07-29
+updated: 2026-07-31
 archived_at: null
 ---
 
