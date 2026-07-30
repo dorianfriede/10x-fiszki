@@ -231,29 +231,29 @@ No schema changes — F-01's migration already covers this slice's data model.
 
 #### Automated
 
-- [x] 1.1 Linting passes: `npm run lint`
-- [x] 1.2 Type checking passes: `npx astro check`
+- [x] 1.1 Linting passes: `npm run lint` — 4518224
+- [x] 1.2 Type checking passes: `npx astro check` — 4518224
 
 #### Manual
 
-- [ ] 1.3 An unauthenticated request to `/decks` redirects to `/auth/signin`
-- [ ] 1.4 An unauthenticated POST to `/api/decks` redirects to `/auth/signin` (not a 404)
-- [ ] 1.5 A signed-in user sees a "Decks" link in the nav on any page
+- [x] 1.3 An unauthenticated request to `/decks` redirects to `/auth/signin` — 4518224
+- [x] 1.4 An unauthenticated POST to `/api/decks` redirects to `/auth/signin` (not a 404) — 4518224
+- [x] 1.5 A signed-in user sees a "Decks" link in the nav on any page — 4518224
 
 ### Phase 2: Deck list + inline creation
 
 #### Automated
 
-- [ ] 2.1 Linting passes: `npm run lint`
-- [ ] 2.2 Type checking passes: `npx astro check`
-- [ ] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Linting passes: `npm run lint`
+- [x] 2.2 Type checking passes: `npx astro check`
+- [x] 2.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Creating a deck with a valid name shows it immediately in the list
-- [ ] 2.5 Creating a deck with a name already used (any letter case) shows the friendly duplicate-name error and does not create a second row
-- [ ] 2.6 Submitting an empty name or one over 100 characters is blocked client-side with a validation message
-- [ ] 2.7 A second signed-in user sees an empty list — decks created by the first user are not visible (RLS isolation)
+- [x] 2.4 Creating a deck with a valid name shows it immediately in the list
+- [x] 2.5 Creating a deck with a name already used (any letter case) shows the friendly duplicate-name error and does not create a second row
+- [x] 2.6 Submitting an empty name or one over 100 characters is blocked client-side with a validation message
+- [x] 2.7 A second signed-in user sees an empty list — decks created by the first user are not visible (RLS isolation)
 
 ### Phase 3: Deck deletion
 
