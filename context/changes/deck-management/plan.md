@@ -259,12 +259,12 @@ No schema changes — F-01's migration already covers this slice's data model.
 
 #### Automated
 
-- [x] 3.1 Linting passes: `npm run lint`
-- [x] 3.2 Type checking passes: `npx astro check`
-- [x] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Linting passes: `npm run lint` — c9e7fed
+- [x] 3.2 Type checking passes: `npx astro check` — c9e7fed
+- [x] 3.3 Build succeeds: `npm run build` — c9e7fed
 
 #### Manual
 
-- [x] 3.4 Confirming the delete prompt removes the deck from the list
-- [x] 3.5 Canceling the delete prompt leaves the deck untouched
-- [x] 3.6 A forged delete request for a deck id you don't own returns to `/decks` having deleted nothing
+- [x] 3.4 Confirming the delete prompt removes the deck from the list — c9e7fed
+- [x] 3.5 Canceling the delete prompt leaves the deck untouched — c9e7fed
+- [x] 3.6 A forged delete request for a deck id you don't own returns to `/decks` having deleted nothing — c9e7fed
