@@ -26,7 +26,19 @@ const { data: decks } = supabase
         decks && decks.length > 0 ? (
           <ul class="space-y-2">
             {decks.map((deck) => (
-              <li class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white">{deck.name}</li>
+              <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white">
+                <span>{deck.name}</span>
+                <form
+                  method="POST"
+                  action={`/api/decks/${deck.id}/delete`}
+                  class="delete-deck-form"
+                  data-deck-name={deck.name}
+                >
+                  <button type="submit" class="text-sm text-red-300 transition hover:text-red-200">
+                    Delete
+                  </button>
+                </form>
+              </li>
             ))}
           </ul>
         ) : (
@@ -35,4 +47,71 @@ const { data: decks } = supabase
       }
     </div>
   </div>
+
+  <dialog
+    id="delete-confirm-dialog"
+    class="fixed top-1/2 left-1/2 m-0 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-slate-900/95 p-6 text-white backdrop:bg-black/60 backdrop:backdrop-blur-sm"
+  >
+    <p class="mb-6 text-blue-100/80">
+      Delete <span id="delete-confirm-deck-name" class="font-semibold text-white"></span>? This cannot be undone.
+    </p>
+    <div class="flex justify-end gap-3">
+      <button
+        type="button"
+        id="delete-confirm-cancel"
+        class="rounded-lg px-4 py-2 text-sm text-blue-100/80 transition hover:text-white"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        id="delete-confirm-submit"
+        class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-500"
+      >
+        Delete
+      </button>
+    </div>
+  </dialog>
 </Layout>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("#delete-confirm-dialog");
+  const deckNameEl = document.querySelector("#delete-confirm-deck-name");
+  const cancelButton = document.querySelector("#delete-confirm-cancel");
+  const confirmButton = document.querySelector("#delete-confirm-submit");
+
+  let pendingForm: HTMLFormElement | null = null;
+
+  document.querySelectorAll<HTMLFormElement>(".delete-deck-form").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      pendingForm = form;
+      if (deckNameEl) {
+        deckNameEl.textContent = form.dataset.deckName ?? "this deck";
+      }
+      dialog?.showModal();
+    });
+  });
+
+  cancelButton?.addEventListener("click", () => {
+    pendingForm = null;
+    dialog?.close();
+  });
+
+  confirmButton?.addEventListener("click", () => {
+    dialog?.close();
+    pendingForm?.submit();
+    pendingForm = null;
+  });
+
+  dialog?.addEventListener("click", (event) => {
+    if (event.target === dialog) {
+      pendingForm = null;
+      dialog.close();
+    }
+  });
+
+  dialog?.addEventListener("cancel", () => {
+    pendingForm = null;
+  });
+</script>

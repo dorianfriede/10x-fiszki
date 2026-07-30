@@ -244,27 +244,27 @@ No schema changes — F-01's migration already covers this slice's data model.
 
 #### Automated
 
-- [x] 2.1 Linting passes: `npm run lint`
-- [x] 2.2 Type checking passes: `npx astro check`
-- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Linting passes: `npm run lint` — 207b4bc
+- [x] 2.2 Type checking passes: `npx astro check` — 207b4bc
+- [x] 2.3 Build succeeds: `npm run build` — 207b4bc
 
 #### Manual
 
-- [x] 2.4 Creating a deck with a valid name shows it immediately in the list
-- [x] 2.5 Creating a deck with a name already used (any letter case) shows the friendly duplicate-name error and does not create a second row
-- [x] 2.6 Submitting an empty name or one over 100 characters is blocked client-side with a validation message
-- [x] 2.7 A second signed-in user sees an empty list — decks created by the first user are not visible (RLS isolation)
+- [x] 2.4 Creating a deck with a valid name shows it immediately in the list — 207b4bc
+- [x] 2.5 Creating a deck with a name already used (any letter case) shows the friendly duplicate-name error and does not create a second row — 207b4bc
+- [x] 2.6 Submitting an empty name or one over 100 characters is blocked client-side with a validation message — 207b4bc
+- [x] 2.7 A second signed-in user sees an empty list — decks created by the first user are not visible (RLS isolation) — 207b4bc
 
 ### Phase 3: Deck deletion
 
 #### Automated
 
-- [ ] 3.1 Linting passes: `npm run lint`
-- [ ] 3.2 Type checking passes: `npx astro check`
-- [ ] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Linting passes: `npm run lint`
+- [x] 3.2 Type checking passes: `npx astro check`
+- [x] 3.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 Confirming the delete prompt removes the deck from the list
-- [ ] 3.5 Canceling the delete prompt leaves the deck untouched
-- [ ] 3.6 A forged delete request for a deck id you don't own returns to `/decks` having deleted nothing
+- [x] 3.4 Confirming the delete prompt removes the deck from the list
+- [x] 3.5 Canceling the delete prompt leaves the deck untouched
+- [x] 3.6 A forged delete request for a deck id you don't own returns to `/decks` having deleted nothing
