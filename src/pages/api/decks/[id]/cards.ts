@@ -9,7 +9,14 @@ interface CardInput {
 function isValidCardInput(item: unknown): item is CardInput {
   if (!item || typeof item !== "object") return false;
   const { front, back } = item as Record<string, unknown>;
-  return typeof front === "string" && front.trim().length > 0 && typeof back === "string" && back.trim().length > 0;
+  return (
+    typeof front === "string" &&
+    front.trim().length > 0 &&
+    front.length <= 2000 &&
+    typeof back === "string" &&
+    back.trim().length > 0 &&
+    back.length <= 2000
+  );
 }
 
 export const POST: APIRoute = async (context) => {
@@ -32,10 +39,15 @@ export const POST: APIRoute = async (context) => {
   const cards = body && typeof body === "object" ? (body as Record<string, unknown>).cards : undefined;
 
   if (!Array.isArray(cards) || cards.length === 0 || !cards.every(isValidCardInput)) {
-    return new Response(JSON.stringify({ error: "Provide at least one card with non-empty front and back text" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        error: "Provide at least one card with non-empty front and back text, each up to 2000 characters",
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   const supabase = createClient(context.request.headers, context.cookies);

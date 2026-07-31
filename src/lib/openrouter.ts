@@ -22,7 +22,14 @@ export class GenerationError extends Error {}
 function isValidProposal(card: unknown): card is FlashcardProposal {
   if (typeof card !== "object" || card === null) return false;
   const { front, back } = card as Record<string, unknown>;
-  return typeof front === "string" && front.trim().length > 0 && typeof back === "string" && back.trim().length > 0;
+  return (
+    typeof front === "string" &&
+    front.trim().length > 0 &&
+    front.length <= 2000 &&
+    typeof back === "string" &&
+    back.trim().length > 0 &&
+    back.length <= 2000
+  );
 }
 
 function extractContent(payload: unknown): string | null {
@@ -60,12 +67,19 @@ export async function generateFlashcards(sourceText: string): Promise<{ proposal
           { role: "user", content: sourceText },
         ],
       }),
+      signal: AbortSignal.timeout(15_000),
     });
-  } catch {
+  } catch (err) {
+    if (err instanceof Error && err.name === "TimeoutError") {
+      console.error("openrouter call failed", { reason: "timeout" });
+      throw new GenerationError("The AI service took too long to respond");
+    }
+    console.error("openrouter call failed", { reason: "network error" });
     throw new GenerationError("Could not reach the AI service");
   }
 
   if (!response.ok) {
+    console.error("openrouter call failed", { status: response.status });
     throw new GenerationError("The AI service returned an error");
   }
 
@@ -73,6 +87,7 @@ export async function generateFlashcards(sourceText: string): Promise<{ proposal
   const content = extractContent(payload);
 
   if (content === null) {
+    console.error("openrouter call failed", { reason: "unexpected response shape" });
     throw new GenerationError("The AI service returned an unexpected response");
   }
 
@@ -80,6 +95,7 @@ export async function generateFlashcards(sourceText: string): Promise<{ proposal
   try {
     parsed = JSON.parse(content);
   } catch {
+    console.error("openrouter call failed", { reason: "malformed JSON content" });
     throw new GenerationError("The AI service returned malformed output");
   }
 

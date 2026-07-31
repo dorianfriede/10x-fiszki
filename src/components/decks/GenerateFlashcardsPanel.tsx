@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Sparkles, CircleAlert, RefreshCw, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -29,8 +29,17 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveResult, setSaveResult] = useState<SaveResult | null>(null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   async function handleGenerate() {
+    if (isGenerating) return;
+
     const trimmed = text.trim();
 
     if (!trimmed) {
@@ -57,6 +66,8 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
 
       const data = (await response.json()) as { proposals?: { front: string; back: string }[]; error?: string };
 
+      if (!isMountedRef.current) return;
+
       if (!response.ok) {
         setGenerationError(data.error ?? "The AI service returned an error");
         setProposals(null);
@@ -65,10 +76,11 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
 
       setProposals((data.proposals ?? []).map((proposal) => ({ ...proposal, decision: null })));
     } catch {
+      if (!isMountedRef.current) return;
       setGenerationError("Could not reach the server");
       setProposals(null);
     } finally {
-      setIsGenerating(false);
+      if (isMountedRef.current) setIsGenerating(false);
     }
   }
 
@@ -84,7 +96,7 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
   const acceptedProposals = proposals?.filter((proposal) => proposal.decision === "accepted") ?? [];
 
   async function handleSave() {
-    if (acceptedProposals.length === 0) return;
+    if (isSaving || acceptedProposals.length === 0) return;
 
     setSaveError(null);
     setIsSaving(true);
@@ -100,6 +112,8 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
 
       const data = (await response.json()) as Partial<SaveResult> & { error?: string };
 
+      if (!isMountedRef.current) return;
+
       if (!response.ok) {
         setSaveError(data.error ?? "Could not save the cards");
         return;
@@ -108,9 +122,10 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
       setSaveResult({ saved: data.saved ?? [], totalCardCount: data.totalCardCount ?? 0 });
       setProposals(null);
     } catch {
+      if (!isMountedRef.current) return;
       setSaveError("Could not reach the server");
     } finally {
-      setIsSaving(false);
+      if (isMountedRef.current) setIsSaving(false);
     }
   }
 
