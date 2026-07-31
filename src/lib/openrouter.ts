@@ -1,7 +1,7 @@
 import { OPENROUTER_API_KEY } from "astro:env/server";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "openai/gpt-4o-mini";
+const MODEL = "openai/gpt-oss-20b:free";
 
 const SYSTEM_PROMPT = `You turn study text into flashcards for spaced repetition.
 

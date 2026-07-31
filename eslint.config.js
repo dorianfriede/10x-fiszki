@@ -65,6 +65,9 @@ const astroConfig = tseslint.config({
     "astro/no-set-html-directive": "error",
     "astro/no-unused-css-selector": "warn",
     "astro/prefer-class-list-directive": "warn",
+    // astro-eslint-parser doesn't attach a parent to top-level `return` in frontmatter,
+    // which crashes this rule's ReturnStatement handler (nullThrows on node.parent).
+    "@typescript-eslint/no-misused-promises": "off",
   },
 });
 

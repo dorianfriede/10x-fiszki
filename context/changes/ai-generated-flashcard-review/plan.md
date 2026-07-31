@@ -245,30 +245,30 @@ No schema migration — `cards.source = 'ai'` already exists from F-01. No exist
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npx astro check`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Build succeeds: `npm run build`
+- [x] 1.1 Type checking passes: `npx astro check` — cd28636
+- [x] 1.2 Linting passes: `npm run lint` — cd28636
+- [x] 1.3 Build succeeds: `npm run build` — cd28636
 
 #### Manual
 
-- [ ] 1.4 Missing-config banner shows when `OPENROUTER_API_KEY` is unset
-- [ ] 1.5 `/decks/<id>/generate` and `/api/decks/<id>/generate` redirect to signin when signed out
-- [ ] 1.6 "Generate cards" link appears on every deck row and navigates correctly
+- [x] 1.4 Missing-config banner shows when `OPENROUTER_API_KEY` is unset — cd28636
+- [x] 1.5 `/decks/<id>/generate` and `/api/decks/<id>/generate` redirect to signin when signed out — cd28636
+- [x] 1.6 "Generate cards" link appears on every deck row and navigates correctly — cd28636
 
 ### Phase 2: Generation flow
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npx astro check`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Pasting real text shows generating state then a non-empty proposal list
-- [ ] 2.5 Trivial text yields the friendly zero-results state, not an error
-- [ ] 2.6 Invalid API key produces inline error + working retry, with no source text leaked in the response
-- [ ] 2.7 Text over 10,000 characters is blocked client-side before any network call
+- [x] 2.4 Pasting real text shows generating state then a non-empty proposal list
+- [x] 2.5 Trivial text yields the friendly zero-results state, not an error
+- [x] 2.6 Invalid API key produces inline error + working retry, with no source text leaked in the response
+- [x] 2.7 Text over 10,000 characters is blocked client-side before any network call
 
 ### Phase 3: Review & save flow
 
