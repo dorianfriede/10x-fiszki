@@ -1,12 +1,19 @@
 import React, { useState } from "react";
-import { Sparkles, CircleAlert, RefreshCw } from "lucide-react";
+import { Sparkles, CircleAlert, RefreshCw, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const MAX_TEXT_LENGTH = 10_000;
 
 interface Proposal {
   front: string;
   back: string;
+  decision: "accepted" | "rejected" | null;
+}
+
+interface SaveResult {
+  saved: { front: string; back: string }[];
+  totalCardCount: number;
 }
 
 interface Props {
@@ -19,6 +26,9 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [proposals, setProposals] = useState<Proposal[] | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveResult, setSaveResult] = useState<SaveResult | null>(null);
 
   async function handleGenerate() {
     const trimmed = text.trim();
@@ -35,6 +45,7 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
 
     setLengthError(undefined);
     setGenerationError(null);
+    setSaveResult(null);
     setIsGenerating(true);
 
     try {
@@ -44,7 +55,7 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
         body: JSON.stringify({ text }),
       });
 
-      const data = (await response.json()) as { proposals?: Proposal[]; error?: string };
+      const data = (await response.json()) as { proposals?: { front: string; back: string }[]; error?: string };
 
       if (!response.ok) {
         setGenerationError(data.error ?? "The AI service returned an error");
@@ -52,13 +63,77 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
         return;
       }
 
-      setProposals(data.proposals ?? []);
+      setProposals((data.proposals ?? []).map((proposal) => ({ ...proposal, decision: null })));
     } catch {
       setGenerationError("Could not reach the server");
       setProposals(null);
     } finally {
       setIsGenerating(false);
     }
+  }
+
+  function setDecision(index: number, decision: "accepted" | "rejected") {
+    setProposals(
+      (current) =>
+        current?.map((proposal, i) =>
+          i === index ? { ...proposal, decision: proposal.decision === decision ? null : decision } : proposal,
+        ) ?? null,
+    );
+  }
+
+  const acceptedProposals = proposals?.filter((proposal) => proposal.decision === "accepted") ?? [];
+
+  async function handleSave() {
+    if (acceptedProposals.length === 0) return;
+
+    setSaveError(null);
+    setIsSaving(true);
+
+    try {
+      const response = await fetch(`/api/decks/${deckId}/cards`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cards: acceptedProposals.map(({ front, back }) => ({ front, back })),
+        }),
+      });
+
+      const data = (await response.json()) as Partial<SaveResult> & { error?: string };
+
+      if (!response.ok) {
+        setSaveError(data.error ?? "Could not save the cards");
+        return;
+      }
+
+      setSaveResult({ saved: data.saved ?? [], totalCardCount: data.totalCardCount ?? 0 });
+      setProposals(null);
+    } catch {
+      setSaveError("Could not reach the server");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  if (saveResult) {
+    return (
+      <div className="space-y-6">
+        <div className="rounded-2xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+          <h2 className="text-xl font-semibold text-white">Saved {saveResult.saved.length} cards to this deck</h2>
+          <p className="mt-1 text-sm text-blue-100/60">This deck now has {saveResult.totalCardCount} cards total.</p>
+        </div>
+
+        <ul className="space-y-3">
+          {saveResult.saved.map((card, index) => (
+            <li key={index} className="rounded-xl border border-white/10 bg-white/5 p-4 text-white">
+              <p className="text-sm text-blue-100/60">Front</p>
+              <p className="mb-3">{card.front}</p>
+              <p className="text-sm text-blue-100/60">Back</p>
+              <p>{card.back}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   }
 
   return (
@@ -129,16 +204,69 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
       )}
 
       {proposals && proposals.length > 0 && (
-        <ul className="space-y-3">
-          {proposals.map((proposal, index) => (
-            <li key={index} className="rounded-xl border border-white/10 bg-white/5 p-4 text-white">
-              <p className="text-sm text-blue-100/60">Front</p>
-              <p className="mb-3">{proposal.front}</p>
-              <p className="text-sm text-blue-100/60">Back</p>
-              <p>{proposal.back}</p>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="space-y-3">
+            {proposals.map((proposal, index) => (
+              <li key={index} className="rounded-xl border border-white/10 bg-white/5 p-4 text-white">
+                <p className="text-sm text-blue-100/60">Front</p>
+                <p className="mb-3">{proposal.front}</p>
+                <p className="text-sm text-blue-100/60">Back</p>
+                <p className="mb-4">{proposal.back}</p>
+
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setDecision(index, "accepted");
+                    }}
+                    className={cn(
+                      "rounded-lg px-3 py-1.5 transition-colors",
+                      proposal.decision === "accepted"
+                        ? "bg-emerald-600 text-white hover:bg-emerald-500"
+                        : "bg-white/10 text-white hover:bg-white/20",
+                    )}
+                  >
+                    <Check className="size-4" />
+                    Accept
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setDecision(index, "rejected");
+                    }}
+                    className={cn(
+                      "rounded-lg px-3 py-1.5 transition-colors",
+                      proposal.decision === "rejected"
+                        ? "bg-red-600 text-white hover:bg-red-500"
+                        : "bg-white/10 text-white hover:bg-white/20",
+                    )}
+                  >
+                    <X className="size-4" />
+                    Reject
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {saveError && (
+            <p className="flex items-center gap-1 text-sm text-red-300">
+              <CircleAlert className="size-4 shrink-0" />
+              {saveError}
+            </p>
+          )}
+
+          <Button
+            type="button"
+            disabled={acceptedProposals.length === 0 || isSaving}
+            onClick={handleSave}
+            className="w-full rounded-lg bg-purple-600 px-4 py-2 font-medium text-white transition-colors hover:bg-purple-500"
+          >
+            {isSaving
+              ? "Saving..."
+              : `Save ${acceptedProposals.length} card${acceptedProposals.length === 1 ? "" : "s"}`}
+          </Button>
+        </>
       )}
     </div>
   );

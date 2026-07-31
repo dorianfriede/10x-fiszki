@@ -259,29 +259,29 @@ No schema migration — `cards.source = 'ai'` already exists from F-01. No exist
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npx astro check`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check` — f97e48b
+- [x] 2.2 Linting passes: `npm run lint` — f97e48b
+- [x] 2.3 Build succeeds: `npm run build` — f97e48b
 
 #### Manual
 
-- [x] 2.4 Pasting real text shows generating state then a non-empty proposal list
-- [x] 2.5 Trivial text yields the friendly zero-results state, not an error
-- [x] 2.6 Invalid API key produces inline error + working retry, with no source text leaked in the response
-- [x] 2.7 Text over 10,000 characters is blocked client-side before any network call
+- [x] 2.4 Pasting real text shows generating state then a non-empty proposal list — f97e48b
+- [x] 2.5 Trivial text yields the friendly zero-results state, not an error — f97e48b
+- [x] 2.6 Invalid API key produces inline error + working retry, with no source text leaked in the response — f97e48b
+- [x] 2.7 Text over 10,000 characters is blocked client-side before any network call — f97e48b
 
 ### Phase 3: Review & save flow
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npx astro check`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check`
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 Accept/reject toggling works with no network calls until Save
-- [ ] 3.5 Save persists exactly the accepted set and shows a correct confirmation view
-- [ ] 3.6 Saved rows have `source = 'ai'` and correct `deck_id`; rejected/undecided rows are never inserted
-- [ ] 3.7 Cross-user forged-deck-id save attempt is rejected by RLS
-- [ ] 3.8 Refreshing mid-review loses all undecided/unsaved state (nothing silently persisted)
+- [x] 3.4 Accept/reject toggling works with no network calls until Save
+- [x] 3.5 Save persists exactly the accepted set and shows a correct confirmation view
+- [x] 3.6 Saved rows have `source = 'ai'` and correct `deck_id`; rejected/undecided rows are never inserted
+- [x] 3.7 Cross-user forged-deck-id save attempt is rejected by RLS
+- [x] 3.8 Refreshing mid-review loses all undecided/unsaved state (nothing silently persisted)
