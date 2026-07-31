@@ -274,14 +274,14 @@ No schema migration — `cards.source = 'ai'` already exists from F-01. No exist
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npx astro check`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check` — 2e07b50
+- [x] 3.2 Linting passes: `npm run lint` — 2e07b50
+- [x] 3.3 Build succeeds: `npm run build` — 2e07b50
 
 #### Manual
 
-- [x] 3.4 Accept/reject toggling works with no network calls until Save
-- [x] 3.5 Save persists exactly the accepted set and shows a correct confirmation view
-- [x] 3.6 Saved rows have `source = 'ai'` and correct `deck_id`; rejected/undecided rows are never inserted
-- [x] 3.7 Cross-user forged-deck-id save attempt is rejected by RLS
-- [x] 3.8 Refreshing mid-review loses all undecided/unsaved state (nothing silently persisted)
+- [x] 3.4 Accept/reject toggling works with no network calls until Save — 2e07b50
+- [x] 3.5 Save persists exactly the accepted set and shows a correct confirmation view — 2e07b50
+- [x] 3.6 Saved rows have `source = 'ai'` and correct `deck_id`; rejected/undecided rows are never inserted — 2e07b50
+- [x] 3.7 Cross-user forged-deck-id save attempt is rejected by RLS — 2e07b50
+- [x] 3.8 Refreshing mid-review loses all undecided/unsaved state (nothing silently persisted) — 2e07b50
