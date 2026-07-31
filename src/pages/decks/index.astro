@@ -30,16 +30,21 @@ const { data: decks, error: decksError } = supabase
             {decks.map((deck) => (
               <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white">
                 <span>{deck.name}</span>
-                <form
-                  method="POST"
-                  action={`/api/decks/${deck.id}/delete`}
-                  class="delete-deck-form"
-                  data-deck-name={deck.name}
-                >
-                  <button type="submit" class="text-sm text-red-300 transition hover:text-red-200">
-                    Delete
-                  </button>
-                </form>
+                <div class="flex items-center gap-4">
+                  <a href={`/decks/${deck.id}/generate`} class="text-sm text-blue-200 transition hover:text-blue-100">
+                    Generate cards
+                  </a>
+                  <form
+                    method="POST"
+                    action={`/api/decks/${deck.id}/delete`}
+                    class="delete-deck-form"
+                    data-deck-name={deck.name}
+                  >
+                    <button type="submit" class="text-sm text-red-300 transition hover:text-red-200">
+                      Delete
+                    </button>
+                  </form>
+                </div>
               </li>
             ))}
           </ul>
