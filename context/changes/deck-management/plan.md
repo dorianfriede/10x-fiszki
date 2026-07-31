@@ -169,6 +169,8 @@ Let a user delete one of their decks, with a confirmation prompt, cascading to i
 
 **Contract**: Each row renders `<form method="POST" action={`/api/decks/${deck.id}/delete`} class="delete-deck-form" data-deck-name={deck.name}>`; a small inline module `<script>` attaches a submit listener to every `.delete-deck-form`, calling `confirm(...)` with the deck's name and calling `e.preventDefault()` if the user cancels.
 
+**Addendum (post-implementation, 2026-07-31, via impl-review F3)**: implemented as a styled `<dialog>` with a small `pendingForm` client-side state variable instead of the planned native `confirm()`. This deviates from this section's stated intent ("without introducing ... client-side state for a single yes/no gate") — accepted because the styled dialog matches the app's existing glassmorphism aesthetic, a native `confirm()` would look out of place, and the behavior was already manually verified (criteria 3.4/3.5). See `context/changes/deck-management/reviews/impl-review.md` F3.
+
 ### Success Criteria:
 
 #### Automated Verification:

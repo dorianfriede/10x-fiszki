@@ -6,9 +6,9 @@ import { createClient } from "@/lib/supabase";
 const error = Astro.url.searchParams.get("error");
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
-const { data: decks } = supabase
+const { data: decks, error: decksError } = supabase
   ? await supabase.from("decks").select("id, name, created_at").order("created_at", { ascending: false })
-  : { data: null };
+  : { data: null, error: null };
 ---
 
 <Layout title="Decks">
@@ -23,7 +23,9 @@ const { data: decks } = supabase
       </div>
 
       {
-        decks && decks.length > 0 ? (
+        decksError ? (
+          <p class="text-center text-red-300">Couldn't load your decks. Please try refreshing the page.</p>
+        ) : decks && decks.length > 0 ? (
           <ul class="space-y-2">
             {decks.map((deck) => (
               <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white">

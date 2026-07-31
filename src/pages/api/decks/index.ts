@@ -5,7 +5,8 @@ const MAX_NAME_LENGTH = 100;
 
 export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
-  const trimmedName = (form.get("name") as string).trim();
+  const rawName = form.get("name");
+  const trimmedName = typeof rawName === "string" ? rawName.trim() : "";
 
   if (!trimmedName || trimmedName.length > MAX_NAME_LENGTH) {
     return context.redirect(
@@ -24,8 +25,9 @@ export const POST: APIRoute = async (context) => {
   }
 
   const duplicateMessage = `You already have a deck named "${trimmedName}".`;
+  const likePattern = trimmedName.replace(/[%_\\]/g, "\\$&");
 
-  const { data: existing } = await supabase.from("decks").select("id").ilike("name", trimmedName).maybeSingle();
+  const { data: existing } = await supabase.from("decks").select("id").ilike("name", likePattern).maybeSingle();
 
   if (existing) {
     return context.redirect(`/decks?error=${encodeURIComponent(duplicateMessage)}`);
