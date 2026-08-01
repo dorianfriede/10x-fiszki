@@ -217,31 +217,31 @@ None — no schema changes.
 
 #### Automated
 
-- [x] 1.1 Linting passes: `npm run lint`
-- [x] 1.2 Type checking passes: `npx astro check`
-- [x] 1.3 Build succeeds: `npm run build`
+- [x] 1.1 Linting passes: `npm run lint` — 4b6b019
+- [x] 1.2 Type checking passes: `npx astro check` — 4b6b019
+- [x] 1.3 Build succeeds: `npm run build` — 4b6b019
 
 #### Manual
 
-- [x] 1.4 Deck with several cards shows newest-first, 25/page, working Prev/Next
-- [x] 1.5 Deck with zero cards shows friendly empty message
-- [x] 1.6 Forged deck id/name redirects to `/decks?error=...` without leaking data
-- [x] 1.7 "View cards" link navigates correctly
+- [x] 1.4 Deck with several cards shows newest-first, 25/page, working Prev/Next — 4b6b019
+- [x] 1.5 Deck with zero cards shows friendly empty message — 4b6b019
+- [x] 1.6 Forged deck id/name redirects to `/decks?error=...` without leaking data — 4b6b019
+- [x] 1.7 "View cards" link navigates correctly — 4b6b019
 
 ### Phase 2: Inline card editing
 
 #### Automated
 
-- [ ] 2.1 Linting passes: `npm run lint`
-- [ ] 2.2 Type checking passes: `npx astro check`
-- [ ] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Linting passes: `npm run lint`
+- [x] 2.2 Type checking passes: `npx astro check`
+- [x] 2.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Editing a card persists and re-renders with new text
-- [ ] 2.5 Duplicate-content edit shows inline conflict message, row stays open
-- [ ] 2.6 Cancel discards in-progress edits without a network call
-- [ ] 2.7 Forged cardId returns 404, surfaced in UI
+- [x] 2.4 Editing a card persists and re-renders with new text
+- [x] 2.5 Duplicate-content edit shows inline conflict message, row stays open
+- [x] 2.6 Cancel discards in-progress edits without a network call
+- [x] 2.7 Forged cardId returns 404, surfaced in UI
 
 ### Phase 3: Card deletion
 

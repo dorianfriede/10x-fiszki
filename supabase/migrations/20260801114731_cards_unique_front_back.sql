@@ -3,4 +3,4 @@
 -- size limit for 2000-char fields, so the index is built over a hash instead.
 
 create unique index cards_deck_id_front_back_hash_idx
-  on cards (deck_id, md5(front || E'\x00' || back));
+  on cards (deck_id, (md5(front) || md5(back)));

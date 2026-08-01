@@ -3,6 +3,7 @@ import { CircleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const PAGE_SIZE = 25;
+const MAX_FIELD_LENGTH = 2000;
 
 interface Card {
   id: string;
@@ -22,6 +23,12 @@ export default function CardListPanel({ deckId }: Props) {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [editingCardId, setEditingCardId] = useState<string | null>(null);
+  const [editFront, setEditFront] = useState("");
+  const [editBack, setEditBack] = useState("");
+  const [editFieldError, setEditFieldError] = useState<string | undefined>();
+  const [editSaveError, setEditSaveError] = useState<string | null>(null);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const isMountedRef = useRef(true);
 
   useEffect(() => {
@@ -67,6 +74,70 @@ export default function CardListPanel({ deckId }: Props) {
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
+  function startEdit(card: Card) {
+    setEditingCardId(card.id);
+    setEditFront(card.front);
+    setEditBack(card.back);
+    setEditFieldError(undefined);
+    setEditSaveError(null);
+  }
+
+  function cancelEdit() {
+    setEditingCardId(null);
+    setEditFieldError(undefined);
+    setEditSaveError(null);
+  }
+
+  function validateEdit(): string | undefined {
+    if (!editFront.trim()) return "Front text is required";
+    if (editFront.length > MAX_FIELD_LENGTH) return `Front text must be ${MAX_FIELD_LENGTH} characters or fewer`;
+    if (!editBack.trim()) return "Back text is required";
+    if (editBack.length > MAX_FIELD_LENGTH) return `Back text must be ${MAX_FIELD_LENGTH} characters or fewer`;
+    return undefined;
+  }
+
+  async function saveEdit(cardId: string) {
+    if (isSavingEdit) return;
+
+    const validationError = validateEdit();
+    if (validationError) {
+      setEditFieldError(validationError);
+      return;
+    }
+
+    setEditFieldError(undefined);
+    setEditSaveError(null);
+    setIsSavingEdit(true);
+
+    try {
+      const response = await fetch(`/api/decks/${deckId}/cards/${cardId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ front: editFront, back: editBack }),
+      });
+
+      const data = (await response.json()) as { card?: Card; error?: string };
+
+      if (!isMountedRef.current) return;
+
+      if (!response.ok) {
+        setEditSaveError(data.error ?? "Could not save the card");
+        return;
+      }
+
+      if (data.card) {
+        const updated = data.card;
+        setCards((current) => current.map((card) => (card.id === updated.id ? updated : card)));
+      }
+      setEditingCardId(null);
+    } catch {
+      if (!isMountedRef.current) return;
+      setEditSaveError("Could not reach the server");
+    } finally {
+      if (isMountedRef.current) setIsSavingEdit(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       {isLoading && <p className="text-blue-100/60">Loading cards...</p>}
@@ -85,14 +156,91 @@ export default function CardListPanel({ deckId }: Props) {
       {!isLoading && !loadError && total > 0 && (
         <>
           <ul className="space-y-3">
-            {cards.map((card) => (
-              <li key={card.id} className="rounded-xl border border-white/10 bg-white/5 p-4 text-white">
-                <p className="text-sm text-blue-100/60">Front</p>
-                <p className="mb-3 whitespace-pre-wrap">{card.front}</p>
-                <p className="text-sm text-blue-100/60">Back</p>
-                <p className="whitespace-pre-wrap">{card.back}</p>
-              </li>
-            ))}
+            {cards.map((card) =>
+              editingCardId === card.id ? (
+                <li key={card.id} className="rounded-xl border border-white/10 bg-white/5 p-4 text-white">
+                  <label htmlFor={`edit-front-${card.id}`} className="mb-1 block text-sm text-blue-100/60">
+                    Front
+                  </label>
+                  <textarea
+                    id={`edit-front-${card.id}`}
+                    value={editFront}
+                    onChange={(e) => {
+                      setEditFront(e.target.value);
+                      if (editFieldError) setEditFieldError(undefined);
+                    }}
+                    rows={4}
+                    className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/40 transition-colors focus:ring-2 focus:ring-purple-400 focus:outline-none"
+                  />
+
+                  <label htmlFor={`edit-back-${card.id}`} className="mt-4 mb-1 block text-sm text-blue-100/60">
+                    Back
+                  </label>
+                  <textarea
+                    id={`edit-back-${card.id}`}
+                    value={editBack}
+                    onChange={(e) => {
+                      setEditBack(e.target.value);
+                      if (editFieldError) setEditFieldError(undefined);
+                    }}
+                    rows={4}
+                    className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/40 transition-colors focus:ring-2 focus:ring-purple-400 focus:outline-none"
+                  />
+
+                  {editFieldError && (
+                    <p className="mt-1 flex items-center gap-1 text-xs text-red-300">
+                      <CircleAlert className="size-3" />
+                      {editFieldError}
+                    </p>
+                  )}
+
+                  {editSaveError && (
+                    <p className="mt-2 flex items-center gap-1 text-sm text-red-300">
+                      <CircleAlert className="size-4 shrink-0" />
+                      {editSaveError}
+                    </p>
+                  )}
+
+                  <div className="mt-4 flex gap-2">
+                    <Button
+                      type="button"
+                      disabled={isSavingEdit}
+                      onClick={() => void saveEdit(card.id)}
+                      className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500"
+                    >
+                      {isSavingEdit ? "Saving..." : "Save"}
+                    </Button>
+                    <Button
+                      type="button"
+                      disabled={isSavingEdit}
+                      onClick={cancelEdit}
+                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </li>
+              ) : (
+                <li key={card.id} className="rounded-xl border border-white/10 bg-white/5 p-4 text-white">
+                  <p className="text-sm text-blue-100/60">Front</p>
+                  <p className="mb-3 whitespace-pre-wrap">{card.front}</p>
+                  <p className="text-sm text-blue-100/60">Back</p>
+                  <p className="whitespace-pre-wrap">{card.back}</p>
+
+                  <div className="mt-4">
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        startEdit(card);
+                      }}
+                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                </li>
+              ),
+            )}
           </ul>
 
           <div className="flex items-center justify-between">
