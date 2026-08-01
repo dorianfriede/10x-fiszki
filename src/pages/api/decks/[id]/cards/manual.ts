@@ -57,23 +57,6 @@ export const POST: APIRoute = async (context) => {
     });
   }
 
-  const { count: duplicateCount } = await supabase
-    .from("cards")
-    .select("id", { count: "exact", head: true })
-    .eq("deck_id", id)
-    .eq("front", body.front)
-    .eq("back", body.back);
-
-  if (duplicateCount) {
-    return new Response(
-      JSON.stringify({ error: "A card with this exact front and back already exists in this deck" }),
-      {
-        status: 409,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
-  }
-
   const { data: card, error } = await supabase
     .from("cards")
     .insert({ deck_id: id, front: body.front, back: body.back, source: "manual" as const })
@@ -81,6 +64,15 @@ export const POST: APIRoute = async (context) => {
     .single();
 
   if (error) {
+    if (error.code === "23505") {
+      return new Response(
+        JSON.stringify({ error: "A card with this exact front and back already exists in this deck" }),
+        {
+          status: 409,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
     return new Response(JSON.stringify({ error: error.message }), {
       status: 400,
       headers: { "Content-Type": "application/json" },

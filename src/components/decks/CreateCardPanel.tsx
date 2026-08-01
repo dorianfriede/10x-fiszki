@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CircleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -21,6 +21,13 @@ export default function CreateCardPanel({ deckId }: Props) {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [sessionCards, setSessionCards] = useState<SessionCard[]>([]);
   const frontRef = useRef<HTMLTextAreaElement>(null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   function validate(): string | undefined {
     if (!front.trim()) return "Front text is required";
@@ -52,6 +59,8 @@ export default function CreateCardPanel({ deckId }: Props) {
 
       const data = (await response.json()) as { card?: SessionCard; error?: string };
 
+      if (!isMountedRef.current) return;
+
       if (!response.ok) {
         setSaveError(data.error ?? "Could not save the card");
         return;
@@ -65,9 +74,10 @@ export default function CreateCardPanel({ deckId }: Props) {
       setBack("");
       frontRef.current?.focus();
     } catch {
+      if (!isMountedRef.current) return;
       setSaveError("Could not reach the server");
     } finally {
-      setIsSaving(false);
+      if (isMountedRef.current) setIsSaving(false);
     }
   }
 
