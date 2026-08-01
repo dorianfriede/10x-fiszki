@@ -32,7 +32,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-02 | `ai-generated-flashcard-review`     | paste text, get AI-generated cards, accept/reject each into a deck | F-01, S-01      | US-01, FR-007, FR-008   | in-progress |
 | S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | in-progress |
 | S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | in-progress |
-| S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | blocked |
+| S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | ready |
 
 ## Streams
 
@@ -42,7 +42,7 @@ Navigation aid — groups items that share a prerequisites chain. Canonical orde
 | ------ | ----------------------------- | ----------------------------- | --------------------------------------------------------------------- |
 | A      | Data foundation & generation loop | `F-01` → `S-01` → `S-02`     | Carries the north star; sequenced first under the speed priority.     |
 | B      | Manual entry & card curation  | `S-03` / `S-04`                | Both join Stream A at `S-01`; independent of AI generation, so they can run in parallel with S-02. |
-| C      | Review & scheduling            | `S-05`                          | Joins Stream A at `S-01`; blocked on the third-party SRS choice (Open Roadmap Question), not on schedule pressure. |
+| C      | Review & scheduling            | `S-05`                          | Joins Stream A at `S-01`; SRS library choice resolved (`ts-fsrs`, self-hosted) — no longer blocked. |
 
 ## Baseline
 
@@ -124,16 +124,16 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-05: User can run a spaced-repetition review session
 
-- **Outcome:** user can start a review session for a deck and rate their recall on each card; scheduling itself is delegated to a third-party SRS service.
+- **Outcome:** user can start a review session for a deck and rate their recall on each card; scheduling is computed by the `ts-fsrs` library, self-hosted in our own Astro API routes (not delegated to an external hosted SRS service — see decision below).
 - **Change ID:** `spaced-repetition-review-session`
 - **PRD refs:** FR-013, FR-014
 - **Prerequisites:** F-01, S-01
 - **Parallel with:** S-02, S-03, S-04
 - **Blockers:** —
 - **Unknowns:**
-  - Which third-party SRS service? (PRD Open Question #1) The rating scale (1-4, again/hard/good/easy, etc.) is API-contract-specific, and FR-014's review UI can't be finalized until this is picked. Owner: user. Block: yes.
-- **Risk:** Genuinely blocked on an external decision the team can't resolve unilaterally. Sequenced last so it doesn't stall the other four slices, which can all proceed without it.
-- **Status:** blocked
+  - ~~Which third-party SRS service?~~ (PRD Open Question #1) → resolved 2026-08-01: self-hosted `ts-fsrs` (FSRS v6), not a hosted third-party API. Rating scale is FSRS's native 4-button scale (Again/Hard/Good/Easy), so FR-014's review UI can now be finalized against that contract. Full research and rationale: `context/changes/spaced-repetition-review-session/srs-library-research.md`.
+- **Risk:** Was genuinely blocked on an external decision; resolved by choosing a self-hosted library instead of a hosted vendor, which also sidesteps the early-access/pricing risk of the one hosted option found (SuperMemo API).
+- **Status:** ready
 
 ## Backlog Handoff
 
@@ -144,7 +144,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-02       | `ai-generated-flashcard-review`      | AI flashcard generation with per-card accept/reject (north star)    | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-03       | `manual-flashcard-creation`          | Manual flashcard creation                                            | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-04       | `card-browsing-and-editing`          | Card browse/edit/delete                                              | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
-| S-05       | `spaced-repetition-review-session`   | Spaced-repetition review session                                     | no                      | Blocked on SRS service selection (see Unknowns) |
+| S-05       | `spaced-repetition-review-session`   | Spaced-repetition review session                                     | yes                     | SRS library decision resolved (`ts-fsrs`, self-hosted) — ready for `/10x-plan` |
 
 ## Open Roadmap Questions
 
@@ -152,7 +152,7 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 
 1. ~~Deck deletion behavior (cascade vs. archive)~~ → resolved during roadmap generation (2026-07-28): cascade delete. Was embedded in **F-01**'s Unknowns; F-01 is now unblocked (`Status: ready`).
 2. AI generation prompt design → embedded in **S-02**'s Unknowns. Owner: user. Block: no.
-3. Which third-party SRS service → embedded in **S-05**'s Unknowns. Owner: user. Block: yes (gates S-05).
+3. ~~Which third-party SRS service~~ → resolved 2026-08-01: self-hosted `ts-fsrs` library, not a hosted third-party API. Was embedded in **S-05**'s Unknowns; S-05 is now unblocked (`Status: ready`). Details: `context/changes/spaced-repetition-review-session/srs-library-research.md`.
 
 ## Parked
 

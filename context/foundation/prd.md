@@ -125,6 +125,6 @@ Multi-user web app. Users register and sign in with email + password. No OAuth. 
 
 ## Open Questions
 
-1. **Which third-party SRS service?** The rating scale (1–4, again/hard/good/easy, etc.) is API-contract-specific. The review UI (FR-014) cannot be finalized until the SRS service is selected. Owner: user. Block: yes for FR-014 implementation.
+1. ~~**Which third-party SRS service?**~~ Resolved 2026-08-01: self-hosted `ts-fsrs` library (FSRS v6), not a hosted third-party API — see `context/changes/spaced-repetition-review-session/srs-library-research.md`. Rating scale is FSRS's native 4-button scale (Again/Hard/Good/Easy); FR-014's review UI can now be finalized against that contract. Note: this resolution means FR-014's "scheduling delegated to a third-party SRS service" wording no longer precisely matches the implementation approach (self-hosted, not delegated) — flagged here rather than silently rewritten.
 2. **AI generation prompt design.** What instructions produce 75%+ acceptance rate? The domain rule is clear, but the prompt engineering is unknown. Owner: user. Block: no (FR-007 is still correct; prompt design is an implementation concern).
 3. **Deck deletion behavior.** When a user deletes a deck, what happens to its cards and their SRS scheduling state? Cascade delete, or archive? Owner: user. By: start of implementation.

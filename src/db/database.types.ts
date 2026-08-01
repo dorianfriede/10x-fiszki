@@ -44,27 +44,57 @@ export type Database = {
           back: string
           created_at: string
           deck_id: string
+          difficulty: number
+          due: string
+          elapsed_days: number
           front: string
           id: string
+          lapses: number
+          last_review: string | null
+          learning_steps: number
+          reps: number
+          scheduled_days: number
           source: Database["public"]["Enums"]["card_source"]
+          stability: number
+          state: number
           updated_at: string
         }
         Insert: {
           back: string
           created_at?: string
           deck_id: string
+          difficulty?: number
+          due?: string
+          elapsed_days?: number
           front: string
           id?: string
+          lapses?: number
+          last_review?: string | null
+          learning_steps?: number
+          reps?: number
+          scheduled_days?: number
           source: Database["public"]["Enums"]["card_source"]
+          stability?: number
+          state?: number
           updated_at?: string
         }
         Update: {
           back?: string
           created_at?: string
           deck_id?: string
+          difficulty?: number
+          due?: string
+          elapsed_days?: number
           front?: string
           id?: string
+          lapses?: number
+          last_review?: string | null
+          learning_steps?: number
+          reps?: number
+          scheduled_days?: number
           source?: Database["public"]["Enums"]["card_source"]
+          stability?: number
+          state?: number
           updated_at?: string
         }
         Relationships: [
