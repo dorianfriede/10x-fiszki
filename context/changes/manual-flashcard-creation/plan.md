@@ -149,18 +149,18 @@ No schema migration — `cards.source = 'manual'` already exists from F-01. No e
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npx astro check`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Build succeeds: `npm run build`
+- [x] 1.1 Type checking passes: `npx astro check` — b52357b
+- [x] 1.2 Linting passes: `npm run lint` — b52357b
+- [x] 1.3 Build succeeds: `npm run build` — b52357b
 
 #### Manual
 
-- [x] 1.4 The "Add card" link appears on every deck row and navigates correctly
-- [x] 1.5 Unauthenticated requests to both new routes redirect to `/auth/signin`
-- [x] 1.6 Visiting the create-card page for a deck you don't own/doesn't exist redirects to `/decks` with "Deck not found"
-- [x] 1.7 Creating a card with valid text clears the form, adds it to the session list, and refocuses the front field
-- [x] 1.8 Empty or >2000-character front/back is blocked client-side before any network call
-- [x] 1.9 Multiple cards created in one visit accumulate in the session list, newest first
-- [x] 1.10 Created rows have `source = 'manual'` and correct `deck_id` in the database
-- [x] 1.11 A forged cross-user POST is rejected and inserts nothing
-- [x] 1.12 Submitting an exact front/back duplicate for the same deck is rejected and inserts nothing
+- [x] 1.4 The "Add card" link appears on every deck row and navigates correctly — b52357b
+- [x] 1.5 Unauthenticated requests to both new routes redirect to `/auth/signin` — b52357b
+- [x] 1.6 Visiting the create-card page for a deck you don't own/doesn't exist redirects to `/decks` with "Deck not found" — b52357b
+- [x] 1.7 Creating a card with valid text clears the form, adds it to the session list, and refocuses the front field — b52357b
+- [x] 1.8 Empty or >2000-character front/back is blocked client-side before any network call — b52357b
+- [x] 1.9 Multiple cards created in one visit accumulate in the session list, newest first — b52357b
+- [x] 1.10 Created rows have `source = 'manual'` and correct `deck_id` in the database — b52357b
+- [x] 1.11 A forged cross-user POST is rejected and inserts nothing — b52357b
+- [x] 1.12 Submitting an exact front/back duplicate for the same deck is rejected and inserts nothing — b52357b
