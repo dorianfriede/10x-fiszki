@@ -316,15 +316,15 @@ The new columns are additive with `not null default` values, so the migration is
 
 #### Automated
 
-- [x] 3.1 `npm run lint` passes
-- [x] 3.2 `npm run build` passes
+- [x] 3.1 `npm run lint` passes — dfa036b
+- [x] 3.2 `npm run build` passes — dfa036b
 
 #### Manual
 
-- [x] 3.3 Full reveal → rate → auto-advance loop works end to end
-- [x] 3.4 Plain "Session complete" shows after the last card when no due cards remain
-- [x] 3.5 "Session complete — N more due" with Finish/Continue actions shows when due cards remain beyond the cap; Continue fetches a fresh batch and resumes
-- [x] 3.6 Unified empty-state message shows for empty/no-due decks
-- [x] 3.7 Rated card's next `due` matches the chosen grade's expected FSRS outcome
-- [x] 3.8 Reveal and rating controls are keyboard-usable
-- [x] 3.9 A failed rating POST shows an inline error, keeps the card revealed, and allows retry
+- [x] 3.3 Full reveal → rate → auto-advance loop works end to end — dfa036b
+- [x] 3.4 Plain "Session complete" shows after the last card when no due cards remain — dfa036b
+- [x] 3.5 "Session complete — N more due" with Finish/Continue actions shows when due cards remain beyond the cap; Continue fetches a fresh batch and resumes — dfa036b
+- [x] 3.6 Unified empty-state message shows for empty/no-due decks — dfa036b
+- [x] 3.7 Rated card's next `due` matches the chosen grade's expected FSRS outcome — dfa036b
+- [x] 3.8 Reveal and rating controls are keyboard-usable — dfa036b
+- [x] 3.9 A failed rating POST shows an inline error, keeps the card revealed, and allows retry — dfa036b
