@@ -288,29 +288,29 @@ The new columns are additive with `not null default` values, so the migration is
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly against the local Supabase stack
-- [x] 1.2 `npm run db:types` completes with all 10 new fields present
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 Migration applies cleanly against the local Supabase stack — c4b90d6
+- [x] 1.2 `npm run db:types` completes with all 10 new fields present — c4b90d6
+- [x] 1.3 `npm run lint` passes — c4b90d6
 
 #### Manual
 
-- [ ] 1.4 New columns exist on `cards` with expected defaults (Supabase Studio)
-- [ ] 1.5 New card via existing flows gets valid default FSRS state with no code changes
-- [ ] 1.6 `verify-rls-isolation.sql` still passes with new columns present
+- [x] 1.4 New columns exist on `cards` with expected defaults (Supabase Studio)
+- [x] 1.5 New card via existing flows gets valid default FSRS state with no code changes
+- [x] 1.6 `verify-rls-isolation.sql` still passes with new columns present
 
 ### Phase 2: Server-side FSRS integration
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes
-- [ ] 2.2 `npm run build` passes
+- [x] 2.1 `npm run lint` passes
+- [x] 2.2 `npm run build` passes
 
 #### Manual
 
-- [ ] 2.3 `GET /api/decks/<id>/review` returns a correct due-card batch (≤50)
-- [ ] 2.4 `POST /api/decks/<id>/review` persists FSRS state correctly for a valid rating, and `remainingDue` in the response matches the deck's actual due count
-- [ ] 2.5 Cross-user `cardId` returns 404
-- [ ] 2.6 Invalid grade returns 400
+- [x] 2.3 `GET /api/decks/<id>/review` returns a correct due-card batch (≤50)
+- [x] 2.4 `POST /api/decks/<id>/review` persists FSRS state correctly for a valid rating, and `remainingDue` in the response matches the deck's actual due count
+- [x] 2.5 Cross-user `cardId` returns 404
+- [x] 2.6 Invalid grade returns 400
 
 ### Phase 3: Review session UI
 
