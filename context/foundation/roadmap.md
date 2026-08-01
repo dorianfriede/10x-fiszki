@@ -3,7 +3,7 @@ project: "10xFiszki"
 version: 1
 status: draft
 created: 2026-07-28
-updated: 2026-07-28
+updated: 2026-08-01
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -27,11 +27,11 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 
 | ID   | Change ID                          | Outcome (user can …)                                              | Prerequisites | PRD refs               | Status  |
 | ---- | ----------------------------------- | ------------------------------------------------------------------ | -------------- | ----------------------- | ------- |
-| F-01 | `deck-card-schema-foundation`       | (foundation) decks/cards schema + row-level isolation exist        | —               | NFR (data isolation), Access Control | ready |
-| S-01 | `deck-management`                   | create, view, and delete a named deck                              | F-01            | FR-004, FR-005, FR-006  | proposed |
-| S-02 | `ai-generated-flashcard-review`     | paste text, get AI-generated cards, accept/reject each into a deck | F-01, S-01      | US-01, FR-007, FR-008   | proposed |
-| S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | proposed |
-| S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | proposed |
+| F-01 | `deck-card-schema-foundation`       | (foundation) decks/cards schema + row-level isolation exist        | —               | NFR (data isolation), Access Control | in-progress |
+| S-01 | `deck-management`                   | create, view, and delete a named deck                              | F-01            | FR-004, FR-005, FR-006  | in-progress |
+| S-02 | `ai-generated-flashcard-review`     | paste text, get AI-generated cards, accept/reject each into a deck | F-01, S-01      | US-01, FR-007, FR-008   | in-progress |
+| S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | in-progress |
+| S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | in-progress |
 | S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | blocked |
 
 ## Streams
@@ -69,7 +69,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** — (PRD Open Question #3, deck deletion behavior, resolved during roadmap generation: deleting a deck cascade-deletes its cards and their SRS scheduling state. The cards table's foreign key should be defined accordingly.)
 - **Risk:** Every downstream slice needs this schema to persist real data — sequencing it first avoids retrofitting isolation policies after slices are already built against an ad-hoc shape.
-- **Status:** ready
+- **Status:** in-progress (change `impl_reviewed`, not yet archived)
 
 ## Slices
 
@@ -83,7 +83,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Every other slice needs a deck to target (generate into, add cards to, review). Sequenced immediately after F-01 so the north star (S-02) isn't waiting on anything avoidable.
-- **Status:** proposed
+- **Status:** in-progress (change `impl_reviewed`, not yet archived)
 
 ### S-02: User pastes text, generates AI flashcards, and accepts/rejects each into a deck
 
@@ -96,7 +96,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - AI generation prompt design (PRD Open Question #2): what instructions produce a 75%+ acceptance rate? Owner: user. Block: no (FR-007 is correct as-is; prompt design is an implementation-time iteration, not a planning blocker).
 - **Risk:** This is the north star — the core hypothesis test (does AI-generated quality clear the 75% acceptance bar). Placed as early as F-01/S-01 allow rather than deferred for symmetric ordering, since under the speed priority nothing else matters if this doesn't work.
-- **Status:** proposed
+- **Status:** in-progress (change `impl_reviewed`, not yet archived)
 
 ### S-03: User can manually create a flashcard in a deck
 
@@ -108,7 +108,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Fully independent of AI generation — can be built in parallel with S-02 with no contention, and doubles as a fallback path if AI quality is initially disappointing.
-- **Status:** proposed
+- **Status:** in-progress (change `impl_reviewed`, not yet archived)
 
 ### S-04: User can browse, edit, and delete cards in a deck
 
@@ -120,7 +120,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Only needs the schema and a deck to exist, not a specific card-creation path — can proceed in parallel with S-02/S-03 rather than waiting for either to finish.
-- **Status:** proposed
+- **Status:** in-progress (change `impl_reviewed`, not yet archived)
 
 ### S-05: User can run a spaced-repetition review session
 
@@ -139,11 +139,11 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 | Roadmap ID | Change ID                          | Suggested issue title                                          | Ready for `/10x-plan` | Notes |
 | ---------- | ------------------------------------ | ----------------------------------------------------------------- | ----------------------- | ----- |
-| F-01       | `deck-card-schema-foundation`        | Design decks/cards schema with row-level isolation                 | yes                     | Run `/10x-plan deck-card-schema-foundation` — deck-deletion behavior resolved (cascade delete) |
-| S-01       | `deck-management`                    | Deck create/view/delete                                             | no                      | Waiting on F-01 |
-| S-02       | `ai-generated-flashcard-review`      | AI flashcard generation with per-card accept/reject (north star)    | no                      | Waiting on F-01, S-01 |
-| S-03       | `manual-flashcard-creation`          | Manual flashcard creation                                            | no                      | Waiting on F-01, S-01 |
-| S-04       | `card-browsing-and-editing`          | Card browse/edit/delete                                              | no                      | Waiting on F-01, S-01 |
+| F-01       | `deck-card-schema-foundation`        | Design decks/cards schema with row-level isolation                 | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
+| S-01       | `deck-management`                    | Deck create/view/delete                                             | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
+| S-02       | `ai-generated-flashcard-review`      | AI flashcard generation with per-card accept/reject (north star)    | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
+| S-03       | `manual-flashcard-creation`          | Manual flashcard creation                                            | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
+| S-04       | `card-browsing-and-editing`          | Card browse/edit/delete                                              | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-05       | `spaced-repetition-review-session`   | Spaced-repetition review session                                     | no                      | Blocked on SRS service selection (see Unknowns) |
 
 ## Open Roadmap Questions
