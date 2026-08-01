@@ -31,6 +31,9 @@ const { data: decks, error: decksError } = supabase
               <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white">
                 <span>{deck.name}</span>
                 <div class="flex items-center gap-4">
+                  <a href={`/decks/${deck.id}`} class="text-sm text-blue-200 transition hover:text-blue-100">
+                    View cards
+                  </a>
                   <a href={`/decks/${deck.id}/generate`} class="text-sm text-blue-200 transition hover:text-blue-100">
                     Generate cards
                   </a>

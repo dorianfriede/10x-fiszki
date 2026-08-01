@@ -19,6 +19,69 @@ function isValidCardInput(item: unknown): item is CardInput {
   );
 }
 
+export const GET: APIRoute = async (context) => {
+  if (!context.locals.user) {
+    return new Response(JSON.stringify({ error: "Not authenticated" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const { id } = context.params;
+  if (!id) {
+    return new Response(JSON.stringify({ error: "Missing deck id" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const pageParam = context.url.searchParams.get("page");
+  const pageSizeParam = context.url.searchParams.get("pageSize");
+  const page = pageParam ? Number(pageParam) : 1;
+  const pageSize = pageSizeParam ? Number(pageSizeParam) : 25;
+
+  if (!Number.isInteger(page) || page < 1 || !Number.isInteger(pageSize) || pageSize < 1 || pageSize > 100) {
+    return new Response(JSON.stringify({ error: "Invalid page or pageSize" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) {
+    return new Response(JSON.stringify({ error: "Supabase is not configured" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const {
+    data: cards,
+    count,
+    error,
+  } = await supabase
+    .from("cards")
+    .select("id, front, back, source, created_at", { count: "exact" })
+    .eq("deck_id", id)
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  return new Response(JSON.stringify({ cards, page, pageSize, total: count ?? 0 }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
 export const POST: APIRoute = async (context) => {
   if (!context.locals.user) {
     return new Response(JSON.stringify({ error: "Not authenticated" }), {
