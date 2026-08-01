@@ -92,3 +92,52 @@ export const PATCH: APIRoute = async (context) => {
     headers: { "Content-Type": "application/json" },
   });
 };
+
+export const DELETE: APIRoute = async (context) => {
+  if (!context.locals.user) {
+    return new Response(JSON.stringify({ error: "Not authenticated" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const { id, cardId } = context.params;
+  if (!id || !cardId) {
+    return new Response(JSON.stringify({ error: "Missing deck id or card id" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) {
+    return new Response(JSON.stringify({ error: "Supabase is not configured" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const { data, error } = await supabase
+    .from("cards")
+    .delete()
+    .eq("id", cardId)
+    .eq("deck_id", id)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  if (!data) {
+    return new Response(JSON.stringify({ error: "Card not found" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  return new Response(null, { status: 200 });
+};

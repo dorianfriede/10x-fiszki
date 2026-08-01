@@ -232,28 +232,28 @@ None — no schema changes.
 
 #### Automated
 
-- [x] 2.1 Linting passes: `npm run lint`
-- [x] 2.2 Type checking passes: `npx astro check`
-- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Linting passes: `npm run lint` — ebfa196
+- [x] 2.2 Type checking passes: `npx astro check` — ebfa196
+- [x] 2.3 Build succeeds: `npm run build` — ebfa196
 
 #### Manual
 
-- [x] 2.4 Editing a card persists and re-renders with new text
-- [x] 2.5 Duplicate-content edit shows inline conflict message, row stays open
-- [x] 2.6 Cancel discards in-progress edits without a network call
-- [x] 2.7 Forged cardId returns 404, surfaced in UI
+- [x] 2.4 Editing a card persists and re-renders with new text — ebfa196
+- [x] 2.5 Duplicate-content edit shows inline conflict message, row stays open — ebfa196
+- [x] 2.6 Cancel discards in-progress edits without a network call — ebfa196
+- [x] 2.7 Forged cardId returns 404, surfaced in UI — ebfa196
 
 ### Phase 3: Card deletion
 
 #### Automated
 
-- [ ] 3.1 Linting passes: `npm run lint`
-- [ ] 3.2 Type checking passes: `npx astro check`
-- [ ] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Linting passes: `npm run lint`
+- [x] 3.2 Type checking passes: `npx astro check`
+- [x] 3.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 Delete dialog shows correct card content
-- [ ] 3.5 Cancel (button/backdrop/Esc) leaves card intact
-- [ ] 3.6 Confirm removes card and updates pagination correctly, including last-item-on-non-first-page case
-- [ ] 3.7 Forged cardId returns 404, deletes nothing
+- [x] 3.4 Delete dialog shows correct card content
+- [x] 3.5 Cancel (button/backdrop/Esc) leaves card intact
+- [x] 3.6 Confirm removes card and updates pagination correctly, including last-item-on-non-first-page case
+- [x] 3.7 Forged cardId returns 404, deletes nothing

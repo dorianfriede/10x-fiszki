@@ -29,7 +29,11 @@ export default function CardListPanel({ deckId }: Props) {
   const [editFieldError, setEditFieldError] = useState<string | undefined>();
   const [editSaveError, setEditSaveError] = useState<string | null>(null);
   const [isSavingEdit, setIsSavingEdit] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<Card | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const isMountedRef = useRef(true);
+  const deleteDialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     return () => {
@@ -138,6 +142,53 @@ export default function CardListPanel({ deckId }: Props) {
     }
   }
 
+  function openDeleteConfirm(card: Card) {
+    setPendingDelete(card);
+    setDeleteError(null);
+    deleteDialogRef.current?.showModal();
+  }
+
+  function closeDeleteConfirm() {
+    setPendingDelete(null);
+    setDeleteError(null);
+    deleteDialogRef.current?.close();
+  }
+
+  async function confirmDelete() {
+    if (!pendingDelete || isDeleting) return;
+
+    const cardId = pendingDelete.id;
+    setIsDeleting(true);
+    setDeleteError(null);
+
+    try {
+      const response = await fetch(`/api/decks/${deckId}/cards/${cardId}`, { method: "DELETE" });
+
+      if (!isMountedRef.current) return;
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        setDeleteError(data.error ?? "Could not delete the card");
+        return;
+      }
+
+      const remainingOnPage = cards.filter((card) => card.id !== cardId).length;
+
+      setPendingDelete(null);
+      deleteDialogRef.current?.close();
+      setCards((current) => current.filter((card) => card.id !== cardId));
+      setTotal((current) => current - 1);
+      if (remainingOnPage === 0 && page > 1) {
+        setPage((current) => current - 1);
+      }
+    } catch {
+      if (!isMountedRef.current) return;
+      setDeleteError("Could not reach the server");
+    } finally {
+      if (isMountedRef.current) setIsDeleting(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       {isLoading && <p className="text-blue-100/60">Loading cards...</p>}
@@ -227,7 +278,7 @@ export default function CardListPanel({ deckId }: Props) {
                   <p className="text-sm text-blue-100/60">Back</p>
                   <p className="whitespace-pre-wrap">{card.back}</p>
 
-                  <div className="mt-4">
+                  <div className="mt-4 flex gap-2">
                     <Button
                       type="button"
                       onClick={() => {
@@ -236,6 +287,15 @@ export default function CardListPanel({ deckId }: Props) {
                       className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
                     >
                       Edit
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        openDeleteConfirm(card);
+                      }}
+                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
+                    >
+                      Delete
                     </Button>
                   </div>
                 </li>
@@ -274,6 +334,51 @@ export default function CardListPanel({ deckId }: Props) {
       <a href="/decks" className="inline-block text-sm text-blue-200 transition hover:text-blue-100">
         ← Decks
       </a>
+
+      <dialog
+        ref={deleteDialogRef}
+        onCancel={() => {
+          setPendingDelete(null);
+          setDeleteError(null);
+        }}
+        onClick={(e) => {
+          if (e.target === deleteDialogRef.current) {
+            closeDeleteConfirm();
+          }
+        }}
+        className="fixed top-1/2 left-1/2 m-0 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-slate-900/95 p-6 text-white backdrop:bg-black/60 backdrop:backdrop-blur-sm"
+      >
+        <p className="mb-6 text-blue-100/80">
+          Delete card <span className="font-semibold text-white">&quot;{pendingDelete?.front}&quot;</span>? This cannot
+          be undone.
+        </p>
+
+        {deleteError && (
+          <p className="mb-4 flex items-center gap-1 text-sm text-red-300">
+            <CircleAlert className="size-4 shrink-0" />
+            {deleteError}
+          </p>
+        )}
+
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            disabled={isDeleting}
+            onClick={closeDeleteConfirm}
+            className="rounded-lg px-4 py-2 text-sm text-blue-100/80 transition hover:text-white"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            disabled={isDeleting}
+            onClick={() => void confirmDelete()}
+            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-500"
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </div>
+      </dialog>
     </div>
   );
 }
