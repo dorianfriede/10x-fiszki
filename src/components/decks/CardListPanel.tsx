@@ -133,7 +133,7 @@ export default function CardListPanel({ deckId }: Props) {
         const updated = data.card;
         setCards((current) => current.map((card) => (card.id === updated.id ? updated : card)));
       }
-      setEditingCardId(null);
+      setEditingCardId((current) => (current === cardId ? null : current));
     } catch {
       if (!isMountedRef.current) return;
       setEditSaveError("Could not reach the server");

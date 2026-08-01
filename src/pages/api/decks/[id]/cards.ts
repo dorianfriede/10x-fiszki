@@ -40,7 +40,14 @@ export const GET: APIRoute = async (context) => {
   const page = pageParam ? Number(pageParam) : 1;
   const pageSize = pageSizeParam ? Number(pageSizeParam) : 25;
 
-  if (!Number.isInteger(page) || page < 1 || !Number.isInteger(pageSize) || pageSize < 1 || pageSize > 100) {
+  if (
+    !Number.isInteger(page) ||
+    page < 1 ||
+    page > 1000 ||
+    !Number.isInteger(pageSize) ||
+    pageSize < 1 ||
+    pageSize > 100
+  ) {
     return new Response(JSON.stringify({ error: "Invalid page or pageSize" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
