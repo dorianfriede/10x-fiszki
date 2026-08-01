@@ -34,6 +34,9 @@ const { data: decks, error: decksError } = supabase
                   <a href={`/decks/${deck.id}/generate`} class="text-sm text-blue-200 transition hover:text-blue-100">
                     Generate cards
                   </a>
+                  <a href={`/decks/${deck.id}/cards/new`} class="text-sm text-blue-200 transition hover:text-blue-100">
+                    Add card
+                  </a>
                   <form
                     method="POST"
                     action={`/api/decks/${deck.id}/delete`}

@@ -1,0 +1,31 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import CreateCardPanel from "@/components/decks/CreateCardPanel";
+import { createClient } from "@/lib/supabase";
+
+const { id } = Astro.params;
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+if (!supabase || !id) {
+  return Astro.redirect(`/decks?error=${encodeURIComponent("Supabase is not configured")}`);
+}
+
+const { data: deck } = await supabase.from("decks").select("id, name").eq("id", id).maybeSingle();
+
+if (!deck) {
+  return Astro.redirect(`/decks?error=${encodeURIComponent("Deck not found")}`);
+}
+---
+
+<Layout title={`Add a card — ${deck.name}`}>
+  <div class="bg-cosmic min-h-screen p-4">
+    <div class="mx-auto max-w-2xl">
+      <a href="/decks" class="mb-4 inline-block text-sm text-blue-200 transition hover:text-blue-100">← Decks</a>
+      <h1 class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+        Add a card — {deck.name}
+      </h1>
+
+      <CreateCardPanel deckId={deck.id} client:load />
+    </div>
+  </div>
+</Layout>

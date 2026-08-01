@@ -71,7 +71,7 @@ const astroConfig = tseslint.config({
 const astroReturnWorkaroundConfig = tseslint.config({
   // astro-eslint-parser doesn't attach a parent to top-level `return` in frontmatter,
   // which crashes this rule's ReturnStatement handler (nullThrows on node.parent).
-  files: ["src/pages/decks/\\[id\\]/generate.astro"],
+  files: ["src/pages/decks/\\[id\\]/generate.astro", "src/pages/decks/\\[id\\]/cards/new.astro"],
   rules: {
     "@typescript-eslint/no-misused-promises": "off",
   },
