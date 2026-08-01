@@ -247,13 +247,13 @@ None — no schema changes.
 
 #### Automated
 
-- [x] 3.1 Linting passes: `npm run lint`
-- [x] 3.2 Type checking passes: `npx astro check`
-- [x] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Linting passes: `npm run lint` — ccc44f4
+- [x] 3.2 Type checking passes: `npx astro check` — ccc44f4
+- [x] 3.3 Build succeeds: `npm run build` — ccc44f4
 
 #### Manual
 
-- [x] 3.4 Delete dialog shows correct card content
-- [x] 3.5 Cancel (button/backdrop/Esc) leaves card intact
-- [x] 3.6 Confirm removes card and updates pagination correctly, including last-item-on-non-first-page case
-- [x] 3.7 Forged cardId returns 404, deletes nothing
+- [x] 3.4 Delete dialog shows correct card content — ccc44f4
+- [x] 3.5 Cancel (button/backdrop/Esc) leaves card intact — ccc44f4
+- [x] 3.6 Confirm removes card and updates pagination correctly, including last-item-on-non-first-page case — ccc44f4
+- [x] 3.7 Forged cardId returns 404, deletes nothing — ccc44f4
