@@ -2,6 +2,8 @@ import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { scheduler, toFsrsCard, fromFsrsCard } from "@/lib/fsrs";
 
+// Shrunk from the plan's original 50 to 30 for shorter, easier review sessions —
+// still comfortably under the NFR's 500-cards-per-account ceiling.
 const SESSION_SIZE = 30;
 
 interface RatePayload {
@@ -41,7 +43,9 @@ export const GET: APIRoute = async (context) => {
 
   const { data: cards, error } = await supabase
     .from("cards")
-    .select("*")
+    .select(
+      "id, front, back, due, stability, difficulty, elapsed_days, scheduled_days, learning_steps, reps, lapses, state, last_review",
+    )
     .eq("deck_id", id)
     .lte("due", new Date().toISOString())
     .order("due", { ascending: true })

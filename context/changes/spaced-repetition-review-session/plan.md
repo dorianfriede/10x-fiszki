@@ -29,6 +29,8 @@ Verification: rate a card as each of the 4 grades in turn (across separate revie
 - The deck-scoped action-route precedent (`generate.ts`) is the shape to follow: `GET`+`POST /api/decks/[id]/review`, not a doubly-nested `cards/[cardId]/review.ts`.
 - Sending `back` and raw FSRS fields to the client before "reveal" is not a security boundary — the rest of the app already renders front+back simultaneously everywhere (`CardListPanel.tsx`); reveal here is purely a UX device.
 
+**Addendum (post-implementation, recorded during impl-review 2026-08-02)**: `scheduler` in `src/lib/fsrs.ts` and the client's local preview scheduler in `ReviewSessionPanel.tsx` both use `fsrs(generatorParameters({ enable_short_term: false }))` rather than the plain `fsrs()` specified below in Phase 2 — a deliberate deviation, not an oversight. Without it, a `New`/`Learning` card can resurface within minutes of being rated, which is awkward for this app's single-session review flow (no per-day new-card cap exists here per "What We're NOT Doing"). Disabling short-term steps makes every rating produce a day-scale interval instead. Both instances apply the override consistently, so client preview intervals match what the server actually commits.
+
 ## What We're NOT Doing
 
 - No `review_log`/review-history table — only current FSRS state is persisted on `cards`, per the already-recorded decision in `srs-library-research.md` and this planning session's confirmation.
@@ -170,6 +172,8 @@ export function toFsrsCard(row: Tables<"cards">): Card {
 **Contract**:
 
 - `GET`: auth check → validate `id` → `select *` from `cards` where `deck_id = id and due <= now()`, `order by due asc`, `limit 50` (`const SESSION_SIZE = 50`) → respond `{ cards: [...] }`, each card including `front`, `back`, and every FSRS field as stored (ISO strings for `due`/`last_review`).
+
+  **Addendum (post-implementation, recorded during impl-review 2026-08-02)**: `SESSION_SIZE` was shrunk to `30` for shorter, easier review sessions — still comfortably under the NFR's 500-cards-per-account ceiling. Treat `30` as the current intended value; the `limit 50` above is superseded.
 - `POST`: body `{ cardId: string, grade: number }`, validated by a hand-rolled `isValidGrade` guard (`Number.isInteger(grade) && grade >= 1 && grade <= 4`), matching `isValidCardInput`'s convention — no Zod. Load the row via `.eq("id", cardId).eq("deck_id", id)`; empty result → 404 (ownership + existence combined, per the existing convention of treating an empty RLS-filtered result as not-found). Reconstruct with `toFsrsCard`, call `scheduler.next(card, new Date(), grade)`, persist `fromFsrsCard(result.card)` via `.update(...)` on the same row. Then run one more `count: "exact", head: true` query on `cards` where `deck_id = id and due <= now()` (same pattern as `cards.ts:142`) and respond with `{ due, remainingDue: count ?? 0 }` — `remainingDue` lets the client show an accurate "more cards are due" prompt after the last card in a batch without a separate round-trip.
 - Error mapping follows the existing convention: not-found/empty → 404, else → 400.
 
@@ -224,6 +228,12 @@ Adds the review page and the interactive session panel: fetch, reveal-with-previ
   - `remainingDue > 0` → show "Session complete — {remainingDue} more cards are due" with two actions: **"Finish for now"** (link back to the deck) and **"Continue reviewing"** (re-fetch a fresh batch via the same `GET` used on mount, reset `currentIndex` to 0 and clear reveal state, then resume the loop).
 - On failure (non-OK response or network error): set a `rateError` string state (mirroring `CardListPanel.tsx`'s `editSaveError`/`deleteError` pattern) and render it inline below the rating buttons; do **not** advance `currentIndex` — the card stays revealed with its rating buttons re-enabled so the user can retry the same rating.
 
+#### 3. Deck list entry point and lint config (addendum, recorded during impl-review 2026-08-02)
+
+**Files**: `src/pages/decks/index.astro`, `eslint.config.js`
+
+**Intent**: Not originally listed, but required for the feature to actually be reachable and lint-clean. `decks/index.astro` needed a "Review" link (mirroring the existing "Add card" link) pointing to `/decks/[id]/review` on each deck row. `eslint.config.js` needed `review.astro` added to the existing per-page `astro-return-workaround` ignore list, matching the same entry already present for `generate.astro`, `cards/new.astro`, and `index.astro`.
+
 ### Success Criteria:
 
 #### Automated Verification:
@@ -265,7 +275,7 @@ N/A — same reason as above.
 
 ## Performance Considerations
 
-The `(deck_id, due)` index supports the review query's access pattern directly. The 50-card session cap keeps both the query and the client-side render bounded well under the NFR's 500-cards-per-account ceiling.
+The `(deck_id, due)` index supports the review query's access pattern directly. The 30-card session cap (shrunk from an original 50 during implementation — see Phase 2 addendum) keeps both the query and the client-side render bounded well under the NFR's 500-cards-per-account ceiling.
 
 ## Migration Notes
 

@@ -5,7 +5,21 @@ import type { Tables } from "@/db/database.types";
 // rating — including on a brand-new card — produces a day-scale interval.
 export const scheduler = fsrs(generatorParameters({ enable_short_term: false }));
 
-export function toFsrsCard(row: Tables<"cards">): Card {
+export type FsrsFields = Pick<
+  Tables<"cards">,
+  | "due"
+  | "stability"
+  | "difficulty"
+  | "elapsed_days"
+  | "scheduled_days"
+  | "learning_steps"
+  | "reps"
+  | "lapses"
+  | "state"
+  | "last_review"
+>;
+
+export function toFsrsCard(row: FsrsFields): Card {
   return {
     due: new Date(row.due),
     stability: row.stability,

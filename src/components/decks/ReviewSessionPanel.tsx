@@ -2,22 +2,22 @@ import React, { useEffect, useRef, useState } from "react";
 import { CircleAlert } from "lucide-react";
 import { fsrs, generatorParameters, Rating, type Grade } from "ts-fsrs";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { toFsrsCard } from "@/lib/fsrs";
+import { toFsrsCard, type FsrsFields } from "@/lib/fsrs";
 import type { Tables } from "@/db/database.types";
 
-type ReviewCard = Tables<"cards">;
+type ReviewCard = Pick<Tables<"cards">, "id" | "front" | "back"> & FsrsFields;
 
 interface Props {
   deckId: string;
 }
 
-const RATING_BUTTONS: { grade: Grade; label: string; className: string }[] = [
-  { grade: Rating.Again, label: "Again", className: "bg-red-600 hover:bg-red-500" },
-  { grade: Rating.Hard, label: "Hard", className: "bg-orange-500 hover:bg-orange-400" },
-  { grade: Rating.Good, label: "Good", className: "bg-green-600 hover:bg-green-500" },
-  { grade: Rating.Easy, label: "Easy", className: "bg-blue-600 hover:bg-blue-500" },
-];
+const RATING_BUTTONS: { grade: Grade; label: string; variant: "destructive" | "secondary" | "default" | "outline" }[] =
+  [
+    { grade: Rating.Again, label: "Again", variant: "destructive" },
+    { grade: Rating.Hard, label: "Hard", variant: "secondary" },
+    { grade: Rating.Good, label: "Good", variant: "default" },
+    { grade: Rating.Easy, label: "Easy", variant: "outline" },
+  ];
 
 function pluralize(count: number, unit: string): string {
   return `${count} ${unit}${count === 1 ? "" : "s"}`;
@@ -97,6 +97,7 @@ export default function ReviewSessionPanel({ deckId }: Props) {
   }, [deckId]);
 
   async function continueReviewing() {
+    if (isLoading) return;
     setIsLoading(true);
     setLoadError(null);
 
@@ -255,16 +256,14 @@ export default function ReviewSessionPanel({ deckId }: Props) {
             <p className="mb-4 whitespace-pre-wrap text-white">{currentCard.back}</p>
 
             <div className="flex flex-wrap gap-2">
-              {RATING_BUTTONS.map(({ grade, label, className }) => (
+              {RATING_BUTTONS.map(({ grade, label, variant }) => (
                 <Button
                   key={grade}
                   type="button"
+                  variant={variant}
                   disabled={isRating}
                   onClick={() => void rate(grade)}
-                  className={cn(
-                    "flex-1 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors",
-                    className,
-                  )}
+                  className="flex-1 rounded-lg px-4 py-2 text-sm font-medium"
                 >
                   {label}
                   {preview?.[grade] && (
