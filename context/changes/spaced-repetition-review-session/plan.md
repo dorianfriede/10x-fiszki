@@ -302,29 +302,29 @@ The new columns are additive with `not null default` values, so the migration is
 
 #### Automated
 
-- [x] 2.1 `npm run lint` passes
-- [x] 2.2 `npm run build` passes
+- [x] 2.1 `npm run lint` passes — 4ba9eba
+- [x] 2.2 `npm run build` passes — 4ba9eba
 
 #### Manual
 
-- [x] 2.3 `GET /api/decks/<id>/review` returns a correct due-card batch (≤50)
-- [x] 2.4 `POST /api/decks/<id>/review` persists FSRS state correctly for a valid rating, and `remainingDue` in the response matches the deck's actual due count
-- [x] 2.5 Cross-user `cardId` returns 404
-- [x] 2.6 Invalid grade returns 400
+- [x] 2.3 `GET /api/decks/<id>/review` returns a correct due-card batch (≤50) — 4ba9eba
+- [x] 2.4 `POST /api/decks/<id>/review` persists FSRS state correctly for a valid rating, and `remainingDue` in the response matches the deck's actual due count — 4ba9eba
+- [x] 2.5 Cross-user `cardId` returns 404 — 4ba9eba
+- [x] 2.6 Invalid grade returns 400 — 4ba9eba
 
 ### Phase 3: Review session UI
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
-- [ ] 3.2 `npm run build` passes
+- [x] 3.1 `npm run lint` passes
+- [x] 3.2 `npm run build` passes
 
 #### Manual
 
-- [ ] 3.3 Full reveal → rate → auto-advance loop works end to end
-- [ ] 3.4 Plain "Session complete" shows after the last card when no due cards remain
-- [ ] 3.5 "Session complete — N more due" with Finish/Continue actions shows when due cards remain beyond the cap; Continue fetches a fresh batch and resumes
-- [ ] 3.6 Unified empty-state message shows for empty/no-due decks
-- [ ] 3.7 Rated card's next `due` matches the chosen grade's expected FSRS outcome
-- [ ] 3.8 Reveal and rating controls are keyboard-usable
-- [ ] 3.9 A failed rating POST shows an inline error, keeps the card revealed, and allows retry
+- [x] 3.3 Full reveal → rate → auto-advance loop works end to end
+- [x] 3.4 Plain "Session complete" shows after the last card when no due cards remain
+- [x] 3.5 "Session complete — N more due" with Finish/Continue actions shows when due cards remain beyond the cap; Continue fetches a fresh batch and resumes
+- [x] 3.6 Unified empty-state message shows for empty/no-due decks
+- [x] 3.7 Rated card's next `due` matches the chosen grade's expected FSRS outcome
+- [x] 3.8 Reveal and rating controls are keyboard-usable
+- [x] 3.9 A failed rating POST shows an inline error, keeps the card revealed, and allows retry

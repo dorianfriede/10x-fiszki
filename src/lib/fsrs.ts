@@ -1,7 +1,9 @@
-import { fsrs, type Card } from "ts-fsrs";
+import { fsrs, generatorParameters, type Card } from "ts-fsrs";
 import type { Tables } from "@/db/database.types";
 
-export const scheduler = fsrs();
+// enable_short_term: false skips the minutes-scale (re)learning steps, so every
+// rating — including on a brand-new card — produces a day-scale interval.
+export const scheduler = fsrs(generatorParameters({ enable_short_term: false }));
 
 export function toFsrsCard(row: Tables<"cards">): Card {
   return {

@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { scheduler, toFsrsCard, fromFsrsCard } from "@/lib/fsrs";
 
-const SESSION_SIZE = 50;
+const SESSION_SIZE = 30;
 
 interface RatePayload {
   cardId: string;

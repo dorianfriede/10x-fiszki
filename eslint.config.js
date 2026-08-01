@@ -75,6 +75,7 @@ const astroReturnWorkaroundConfig = tseslint.config({
     "src/pages/decks/\\[id\\]/generate.astro",
     "src/pages/decks/\\[id\\]/cards/new.astro",
     "src/pages/decks/\\[id\\]/index.astro",
+    "src/pages/decks/\\[id\\]/review.astro",
   ],
   rules: {
     "@typescript-eslint/no-misused-promises": "off",
