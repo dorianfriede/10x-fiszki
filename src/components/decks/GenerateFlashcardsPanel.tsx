@@ -261,7 +261,10 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
                     type="button"
                     variant="secondary"
                     size="sm"
-                    className={cn(proposal.decision === "accepted" && "bg-emerald-600 text-white hover:bg-emerald-500")}
+                    className={cn(
+                      proposal.decision === "accepted" &&
+                        "border-emerald-500/40 bg-emerald-600/15 text-emerald-100 hover:bg-emerald-600/25",
+                    )}
                     onClick={() => {
                       setDecision(index, "accepted");
                     }}
@@ -271,9 +274,8 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
                   </Button>
                   <Button
                     type="button"
-                    variant="secondary"
+                    variant={proposal.decision === "rejected" ? "destructive" : "secondary"}
                     size="sm"
-                    className={cn(proposal.decision === "rejected" && "bg-red-600 text-white hover:bg-red-500")}
                     onClick={() => {
                       setDecision(index, "rejected");
                     }}
