@@ -2,9 +2,12 @@
 import Layout from "@/layouts/Layout.astro";
 import CreateDeckForm from "@/components/decks/CreateDeckForm";
 import { createClient } from "@/lib/supabase";
+import { buttonVariants } from "@/components/ui/button";
 import { CircleAlert } from "lucide-react";
 
 const error = Astro.url.searchParams.get("error");
+const actionLinkClass = buttonVariants({ variant: "secondary", size: "sm" });
+const deleteActionClass = buttonVariants({ variant: "destructive", size: "sm" });
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const { data: decks, error: decksError } = supabase
@@ -34,17 +37,17 @@ const { data: decks, error: decksError } = supabase
             {decks.map((deck) => (
               <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white">
                 <span>{deck.name}</span>
-                <div class="flex items-center gap-4">
-                  <a href={`/decks/${deck.id}`} class="text-sm text-blue-200 transition hover:text-blue-100">
+                <div class="flex flex-wrap items-center gap-2">
+                  <a href={`/decks/${deck.id}`} class:list={[actionLinkClass]}>
                     View cards
                   </a>
-                  <a href={`/decks/${deck.id}/generate`} class="text-sm text-blue-200 transition hover:text-blue-100">
+                  <a href={`/decks/${deck.id}/generate`} class:list={[actionLinkClass]}>
                     Generate cards
                   </a>
-                  <a href={`/decks/${deck.id}/cards/new`} class="text-sm text-blue-200 transition hover:text-blue-100">
+                  <a href={`/decks/${deck.id}/cards/new`} class:list={[actionLinkClass]}>
                     Add card
                   </a>
-                  <a href={`/decks/${deck.id}/review`} class="text-sm text-blue-200 transition hover:text-blue-100">
+                  <a href={`/decks/${deck.id}/review`} class:list={[actionLinkClass]}>
                     Review
                   </a>
                   <form
@@ -53,7 +56,7 @@ const { data: decks, error: decksError } = supabase
                     class="delete-deck-form"
                     data-deck-name={deck.name}
                   >
-                    <button type="submit" class="cursor-pointer text-sm text-red-300 transition hover:text-red-200">
+                    <button type="submit" class:list={[deleteActionClass]}>
                       Delete
                     </button>
                   </form>

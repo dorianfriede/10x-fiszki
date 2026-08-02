@@ -401,25 +401,25 @@ No data migration. `Welcome.astro` is deleted in Phase 5; confirm no page other 
 
 #### Automated
 
-- [x] 4.1 Lint passes: `npm run lint`
-- [x] 4.2 Build passes: `npm run build`
+- [x] 4.1 Lint passes: `npm run lint` — 955ea89
+- [x] 4.2 Build passes: `npm run build` — 955ea89
 
 #### Manual
 
-- [ ] 4.3 Every touched panel shows a spinner (not bare text) while loading
-- [ ] 4.4 Every empty-state and inline-error message looks identical across panels
+- [x] 4.3 Every touched panel shows a spinner (not bare text) while loading — 955ea89
+- [x] 4.4 Every empty-state and inline-error message looks identical across panels — 955ea89
 
 ### Phase 5: Homepage Restyle + Dashboard Alignment
 
 #### Automated
 
-- [ ] 5.1 Lint passes: `npm run lint`
-- [ ] 5.2 Build passes: `npm run build`
+- [x] 5.1 Lint passes: `npm run lint`
+- [x] 5.2 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 5.3 Homepage no longer resembles the stock Astro starter template; CTAs navigate to `/auth/signin` and `/auth/signup` correctly
-- [ ] 5.4 Dashboard's heading and Sign out button now match account/auth pages' look
+- [x] 5.3 Homepage no longer resembles the stock Astro starter template; CTAs navigate to `/auth/signin` and `/auth/signup` correctly
+- [x] 5.4 Dashboard's heading and Sign out button now match account/auth pages' look
 
 ### Phase 6: Final Consistency Sweep & Cross-Screen QA
 
