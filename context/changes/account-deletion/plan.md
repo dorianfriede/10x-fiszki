@@ -255,30 +255,30 @@ The purge job is the only mechanism that removes expired accounts and has no ale
 
 #### Automated
 
-- [x] 2.1 `npx astro check` passes
-- [x] 2.2 `npm run lint` passes
+- [x] 2.1 `npx astro check` passes — 8a577f1
+- [x] 2.2 `npm run lint` passes — 8a577f1
 
 #### Manual
 
-- [x] 2.3 `POST /api/account/delete` creates a row and redirects to `/account/pending-deletion`
-- [x] 2.4 `POST /api/account/cancel` removes the row and redirects to `/dashboard`
+- [x] 2.3 `POST /api/account/delete` creates a row and redirects to `/account/pending-deletion` — 8a577f1
+- [x] 2.4 `POST /api/account/cancel` removes the row and redirects to `/dashboard` — 8a577f1
 
 ### Phase 3: Account settings + pending-deletion UI + middleware gating
 
 #### Automated
 
-- [ ] 3.1 `npx astro check` passes
-- [ ] 3.2 `npm run lint` passes
-- [ ] 3.3 `npm run build` passes
+- [x] 3.1 `npx astro check` passes
+- [x] 3.2 `npm run lint` passes
+- [x] 3.3 `npm run build` passes
 
 #### Manual
 
-- [ ] 3.4 Unauthenticated visitor to `/account` redirects to `/auth/signin`
-- [ ] 3.5 Delete button stays disabled until typed email matches exactly
-- [ ] 3.6 Confirmed delete redirects to `/account/pending-deletion` showing correct date/days remaining
-- [ ] 3.7 `/decks` and `/dashboard` redirect to `/account/pending-deletion` while pending
-- [ ] 3.8 Public homepage `/` also redirects to `/account/pending-deletion` while pending
-- [ ] 3.9 Sign-out still works from the pending-deletion screen
-- [ ] 3.10 Re-signing-in while pending still redirects to `/account/pending-deletion`
-- [ ] 3.11 Cancel restores normal access to `/decks` and `/dashboard`
-- [ ] 3.12 Re-signup with same email while pending shows Supabase's unmodified native error
+- [x] 3.4 Unauthenticated visitor to `/account` redirects to `/auth/signin`
+- [x] 3.5 Delete button stays disabled until typed email matches exactly
+- [x] 3.6 Confirmed delete redirects to `/account/pending-deletion` showing correct date/days remaining
+- [x] 3.7 `/decks` and `/dashboard` redirect to `/account/pending-deletion` while pending
+- [x] 3.8 Public homepage `/` also redirects to `/account/pending-deletion` while pending
+- [x] 3.9 Sign-out still works from the pending-deletion screen
+- [x] 3.10 Re-signing-in while pending still redirects to `/account/pending-deletion`
+- [x] 3.11 Cancel restores normal access to `/decks` and `/dashboard`
+- [x] 3.12 Re-signup with same email while pending shows Supabase's unmodified native error
