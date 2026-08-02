@@ -14,7 +14,14 @@ interface RatePayload {
 function isValidGrade(item: unknown): item is RatePayload {
   if (!item || typeof item !== "object") return false;
   const { cardId, grade } = item as Record<string, unknown>;
-  return typeof cardId === "string" && cardId.length > 0 && Number.isInteger(grade) && grade >= 1 && grade <= 4;
+  return (
+    typeof cardId === "string" &&
+    cardId.length > 0 &&
+    typeof grade === "number" &&
+    Number.isInteger(grade) &&
+    grade >= 1 &&
+    grade <= 4
+  );
 }
 
 export const GET: APIRoute = async (context) => {

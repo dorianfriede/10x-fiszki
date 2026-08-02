@@ -242,26 +242,26 @@ The purge job is the only mechanism that removes expired accounts and has no ale
 
 #### Automated
 
-- [x] 1.1 `supabase db push` completes successfully against the linked cloud project
-- [x] 1.2 `npx astro check` passes
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `supabase db push` completes successfully against the linked cloud project — a6d024b
+- [x] 1.2 `npx astro check` passes — a6d024b
+- [x] 1.3 `npm run lint` passes — a6d024b
 
 #### Manual
 
-- [ ] 1.4 `cron.job` shows `purge-expired-account-deletions` registered with schedule `0 3 * * *`
-- [ ] 1.5 Backdated test row is purged (account, decks, cards all gone) after running the job's SQL body
+- [x] 1.4 `cron.job` shows `purge-expired-account-deletions` registered with schedule `0 3 * * *` — a6d024b
+- [x] 1.5 Backdated test row is purged (account, decks, cards all gone) after running the job's SQL body — a6d024b
 
 ### Phase 2: Deletion request + cancel API routes
 
 #### Automated
 
-- [ ] 2.1 `npx astro check` passes
-- [ ] 2.2 `npm run lint` passes
+- [x] 2.1 `npx astro check` passes
+- [x] 2.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 2.3 `POST /api/account/delete` creates a row and redirects to `/account/pending-deletion`
-- [ ] 2.4 `POST /api/account/cancel` removes the row and redirects to `/dashboard`
+- [x] 2.3 `POST /api/account/delete` creates a row and redirects to `/account/pending-deletion`
+- [x] 2.4 `POST /api/account/cancel` removes the row and redirects to `/dashboard`
 
 ### Phase 3: Account settings + pending-deletion UI + middleware gating
 
