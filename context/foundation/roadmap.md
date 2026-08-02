@@ -33,9 +33,9 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | in-progress |
 | S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | in-progress |
 | S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | ready |
-| S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | planned |
+| S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | in-progress |
 | S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | planned |
-| S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | planned |
+| S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | in-progress |
 
 ## Streams
 
@@ -150,7 +150,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Extends UI already built by S-02 (candidate review) and S-05 (review session) — building it before those land risks rework against a moving target.
-- **Status:** planned
+- **Status:** in-progress (change `impl_reviewed`, not yet archived)
 
 ### S-07: User experiences a visually polished UI
 
@@ -175,7 +175,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Where the 30-day countdown/purge job runs (cron, Cloudflare scheduled worker, manual admin trigger) is undecided. Owner: user. Block: no (schema/UI can be built against a `deleted_at` timestamp regardless of purge mechanism).
 - **Risk:** Introduces a scheduled/background deletion mechanism not present anywhere else in the codebase — the purge job is new infrastructure, not just a new screen.
-- **Status:** planned
+- **Status:** in-progress (change `impl_reviewed`, not yet archived)
 
 ## Backlog Handoff
 
@@ -187,9 +187,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-03       | `manual-flashcard-creation`          | Manual flashcard creation                                            | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-04       | `card-browsing-and-editing`          | Card browse/edit/delete                                              | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-05       | `spaced-repetition-review-session`   | Spaced-repetition review session                                     | yes                     | SRS library decision resolved (`ts-fsrs`, self-hosted) — ready for `/10x-plan` |
-| S-06       | `ux-improvements`                    | Bulk accept/reject in candidate review + reset review session       | no                      | Newly added; not in PRD v1 |
+| S-06       | `ux-improvements`                    | Bulk accept/reject in candidate review + reset review session       | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-07       | `ui-polish`                          | Cross-cutting UI polish pass                                         | no                      | Blocked until S-01–S-05 are all implemented; not in PRD v1 |
-| S-08       | `account-deletion`                   | Account deletion with 30-day retention                               | no                      | Purge mechanism (cron/scheduled worker) undecided; not in PRD v1 |
+| S-08       | `account-deletion`                   | Account deletion with 30-day retention                               | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 
 ## Open Roadmap Questions
 
