@@ -1,5 +1,5 @@
 ---
-import { LayoutDashboard, Layers, LogOut, LogIn, UserPlus } from "lucide-react";
+import { Home, LayoutDashboard, Layers, LogOut, LogIn, UserPlus } from "lucide-react";
 
 const { user } = Astro.locals;
 const pathname = Astro.url.pathname;
@@ -21,6 +21,10 @@ const navLinkActive = "bg-white/10 text-white";
       <>
         <span class="text-blue-100/70">{user.email}</span>
         <div class="flex items-center gap-1">
+          <a href="/" class:list={[navLinkBase, isActive("/") ? navLinkActive : navLinkInactive]}>
+            <Home className="size-4" />
+            Home
+          </a>
           <a href="/dashboard" class:list={[navLinkBase, isActive("/dashboard") ? navLinkActive : navLinkInactive]}>
             <LayoutDashboard className="size-4" />
             Dashboard
