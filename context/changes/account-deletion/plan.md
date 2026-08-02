@@ -267,18 +267,18 @@ The purge job is the only mechanism that removes expired accounts and has no ale
 
 #### Automated
 
-- [x] 3.1 `npx astro check` passes
-- [x] 3.2 `npm run lint` passes
-- [x] 3.3 `npm run build` passes
+- [x] 3.1 `npx astro check` passes — 58e990b
+- [x] 3.2 `npm run lint` passes — 58e990b
+- [x] 3.3 `npm run build` passes — 58e990b
 
 #### Manual
 
-- [x] 3.4 Unauthenticated visitor to `/account` redirects to `/auth/signin`
-- [x] 3.5 Delete button stays disabled until typed email matches exactly
-- [x] 3.6 Confirmed delete redirects to `/account/pending-deletion` showing correct date/days remaining
-- [x] 3.7 `/decks` and `/dashboard` redirect to `/account/pending-deletion` while pending
-- [x] 3.8 Public homepage `/` also redirects to `/account/pending-deletion` while pending
-- [x] 3.9 Sign-out still works from the pending-deletion screen
-- [x] 3.10 Re-signing-in while pending still redirects to `/account/pending-deletion`
-- [x] 3.11 Cancel restores normal access to `/decks` and `/dashboard`
-- [x] 3.12 Re-signup with same email while pending shows Supabase's unmodified native error
+- [x] 3.4 Unauthenticated visitor to `/account` redirects to `/auth/signin` — 58e990b
+- [x] 3.5 Delete button stays disabled until typed email matches exactly — 58e990b
+- [x] 3.6 Confirmed delete redirects to `/account/pending-deletion` showing correct date/days remaining — 58e990b
+- [x] 3.7 `/decks` and `/dashboard` redirect to `/account/pending-deletion` while pending — 58e990b
+- [x] 3.8 Public homepage `/` also redirects to `/account/pending-deletion` while pending — 58e990b
+- [x] 3.9 Sign-out still works from the pending-deletion screen — 58e990b
+- [x] 3.10 Re-signing-in while pending still redirects to `/account/pending-deletion` — 58e990b
+- [x] 3.11 Cancel restores normal access to `/decks` and `/dashboard` — 58e990b
+- [x] 3.12 Re-signup with same email while pending shows Supabase's unmodified native error — 58e990b
