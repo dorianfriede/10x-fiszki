@@ -125,7 +125,7 @@ export default function ReviewSessionPanel({ deckId }: Props) {
     if (!revealed) return;
 
     function handleKeyDown(e: KeyboardEvent) {
-      if (isRating) return;
+      if (isRating || isResetDialogOpen) return;
       const button = RATING_BUTTONS.find((b) => b.key === e.key);
       if (!button) return;
       e.preventDefault();
@@ -136,7 +136,7 @@ export default function ReviewSessionPanel({ deckId }: Props) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [revealed, isRating]);
+  }, [revealed, isRating, isResetDialogOpen]);
 
   useEffect(() => {
     let cancelled = false;

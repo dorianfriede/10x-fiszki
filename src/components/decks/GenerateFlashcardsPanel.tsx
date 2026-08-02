@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Sparkles, CircleAlert, RefreshCw, Check, X } from "lucide-react";
+import { Sparkles, RefreshCw, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InlineError } from "@/components/ui/inline-error";
@@ -221,11 +221,8 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
       </div>
 
       {generationError && (
-        <div className="flex items-center justify-between gap-4 rounded-lg border border-red-500/30 bg-red-900/30 px-4 py-3 text-sm text-red-300">
-          <span className="flex items-center gap-2">
-            <CircleAlert className="size-4 shrink-0" />
-            {generationError}
-          </span>
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-red-500/30 bg-red-900/30 px-4 py-3">
+          <InlineError message={generationError} />
           <Button type="button" variant="secondary" size="sm" className="shrink-0" onClick={handleGenerate}>
             <RefreshCw className="size-4" />
             Try again

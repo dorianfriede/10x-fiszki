@@ -22,7 +22,7 @@ export default function DeleteAccountDialog({ email, serverError }: Props) {
 
   return (
     <div>
-      <Button type="button" variant="ghost" className="text-red-300" onClick={openDialog}>
+      <Button type="button" variant="ghost" className="border border-red-500/40 text-red-300" onClick={openDialog}>
         Delete account
       </Button>
 
