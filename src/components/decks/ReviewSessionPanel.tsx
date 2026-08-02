@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { CircleAlert } from "lucide-react";
 import { fsrs, generatorParameters, Rating, type Grade } from "ts-fsrs";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { toFsrsCard, type FsrsFields } from "@/lib/fsrs";
 import type { Tables } from "@/db/database.types";
 
@@ -107,9 +108,9 @@ export default function ReviewSessionPanel({ deckId }: Props) {
   const [isResetting, setIsResetting] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
   const [partialResetMessage, setPartialResetMessage] = useState<string | null>(null);
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const isMountedRef = useRef(true);
   const localSchedulerRef = useRef(fsrs(generatorParameters({ enable_short_term: false })));
-  const resetDialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     return () => {
@@ -260,12 +261,12 @@ export default function ReviewSessionPanel({ deckId }: Props) {
   function openResetConfirm() {
     setResetError(null);
     setPartialResetMessage(null);
-    resetDialogRef.current?.showModal();
+    setIsResetDialogOpen(true);
   }
 
   function closeResetConfirm() {
     setResetError(null);
-    resetDialogRef.current?.close();
+    setIsResetDialogOpen(false);
   }
 
   async function confirmReset() {
@@ -303,7 +304,7 @@ export default function ReviewSessionPanel({ deckId }: Props) {
       setPartialResetMessage(null);
       setRatedSnapshots(new Map());
       setRateError(null);
-      resetDialogRef.current?.close();
+      setIsResetDialogOpen(false);
       await continueReviewing();
     } catch {
       if (!isMountedRef.current) return;
@@ -314,54 +315,28 @@ export default function ReviewSessionPanel({ deckId }: Props) {
   }
 
   const resetDialog = (
-    <dialog
-      ref={resetDialogRef}
-      onCancel={() => {
-        setResetError(null);
-      }}
-      onClick={(e) => {
-        if (e.target === resetDialogRef.current && !isResetting) closeResetConfirm();
-      }}
-      className="fixed top-1/2 left-1/2 m-0 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-slate-900/95 p-6 text-white backdrop:bg-black/60 backdrop:backdrop-blur-sm"
-    >
-      <p className="mb-6 text-blue-100/80">
-        Undo {pluralize(ratedSnapshots.size, "rating")} from this session? Affected cards will return to their
-        pre-rating due dates. This cannot be undone.
-      </p>
-
-      {partialResetMessage && (
-        <p className="mb-4 flex items-center gap-1 text-sm text-amber-300">
-          <CircleAlert className="size-4 shrink-0" />
-          {partialResetMessage}
-        </p>
-      )}
-
-      {resetError && (
-        <p className="mb-4 flex items-center gap-1 text-sm text-red-300">
-          <CircleAlert className="size-4 shrink-0" />
-          {resetError}
-        </p>
-      )}
-
-      <div className="flex justify-end gap-3">
-        <Button
-          type="button"
-          disabled={isResetting}
-          onClick={closeResetConfirm}
-          className="rounded-lg px-4 py-2 text-sm text-blue-100/80 transition hover:text-white"
-        >
-          Cancel
-        </Button>
-        <Button
-          type="button"
-          disabled={isResetting}
-          onClick={() => void confirmReset()}
-          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-500"
-        >
-          {isResetting ? "Resetting..." : "Reset session"}
-        </Button>
-      </div>
-    </dialog>
+    <ConfirmDialog
+      open={isResetDialogOpen}
+      description={
+        <>
+          Undo {pluralize(ratedSnapshots.size, "rating")} from this session? Affected cards will return to their
+          pre-rating due dates. This cannot be undone.
+          {partialResetMessage && (
+            <p className="mt-4 flex items-center gap-1 text-sm text-amber-300">
+              <CircleAlert className="size-4 shrink-0" />
+              {partialResetMessage}
+            </p>
+          )}
+        </>
+      }
+      confirmLabel={isResetting ? "Resetting..." : "Reset session"}
+      cancelLabel="Cancel"
+      danger
+      isPending={isResetting}
+      error={resetError}
+      onConfirm={() => void confirmReset()}
+      onCancel={closeResetConfirm}
+    />
   );
 
   if (isLoading) {
@@ -398,11 +373,7 @@ export default function ReviewSessionPanel({ deckId }: Props) {
               ← Decks
             </a>
             {ratedSnapshots.size > 0 && (
-              <Button
-                type="button"
-                onClick={openResetConfirm}
-                className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
-              >
+              <Button type="button" variant="ghost" className="text-red-300" onClick={openResetConfirm}>
                 Reset session
               </Button>
             )}
@@ -419,25 +390,14 @@ export default function ReviewSessionPanel({ deckId }: Props) {
           due.
         </p>
         <div className="flex justify-center gap-3">
-          <a
-            href="/decks"
-            className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
-          >
-            Finish for now
-          </a>
-          <Button
-            type="button"
-            onClick={() => void continueReviewing()}
-            className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500"
-          >
+          <Button asChild variant="secondary">
+            <a href="/decks">Finish for now</a>
+          </Button>
+          <Button type="button" onClick={() => void continueReviewing()}>
             Continue reviewing
           </Button>
           {ratedSnapshots.size > 0 && (
-            <Button
-              type="button"
-              onClick={openResetConfirm}
-              className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
-            >
+            <Button type="button" variant="ghost" className="text-red-300" onClick={openResetConfirm}>
               Reset session
             </Button>
           )}
@@ -456,11 +416,7 @@ export default function ReviewSessionPanel({ deckId }: Props) {
         <p className="mb-4 whitespace-pre-wrap text-white">{currentCard.front}</p>
 
         {!revealed && (
-          <Button
-            type="button"
-            onClick={reveal}
-            className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500"
-          >
+          <Button type="button" onClick={reveal}>
             Show answer
           </Button>
         )}
@@ -511,9 +467,10 @@ export default function ReviewSessionPanel({ deckId }: Props) {
         {ratedSnapshots.size > 0 && (
           <Button
             type="button"
+            variant="ghost"
+            className="mt-4 text-red-300"
             disabled={isRating}
             onClick={openResetConfirm}
-            className="mt-4 rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
           >
             Reset session
           </Button>

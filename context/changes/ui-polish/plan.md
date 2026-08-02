@@ -375,27 +375,27 @@ No data migration. `Welcome.astro` is deleted in Phase 5; confirm no page other 
 
 #### Automated
 
-- [x] 2.1 Lint passes: `npm run lint`
-- [x] 2.2 Build passes: `npm run build`
+- [x] 2.1 Lint passes: `npm run lint` — ef1d5dd
+- [x] 2.2 Build passes: `npm run build` — ef1d5dd
 
 #### Manual
 
-- [x] 2.3 Icons render correctly for Dashboard/Decks/Sign out (and Sign in/Sign up when signed out)
-- [x] 2.4 The current page is visually distinguishable from the other nav links on at least 3 different pages
-- [x] 2.5 Nav reads clearly at a glance — the original "hard to see the options" complaint is resolved
+- [x] 2.3 Icons render correctly for Dashboard/Decks/Sign out (and Sign in/Sign up when signed out) — ef1d5dd
+- [x] 2.4 The current page is visually distinguishable from the other nav links on at least 3 different pages — ef1d5dd
+- [x] 2.5 Nav reads clearly at a glance — the original "hard to see the options" complaint is resolved — ef1d5dd
 
 ### Phase 3: Shared ConfirmDialog Primitive + Button Call-Site Migration
 
 #### Automated
 
-- [ ] 3.1 Lint passes: `npm run lint`
-- [ ] 3.2 Build passes: `npm run build`
+- [x] 3.1 Lint passes: `npm run lint`
+- [x] 3.2 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 3.3 All 5 confirm dialogs (cards, review-reset, cancel-deletion, delete-account, deck-delete) open, confirm, and cancel correctly and look visually identical to each other
-- [ ] 3.4 Every migrated button shows correct hover/disabled/focus states
-- [ ] 3.5 GenerateFlashcardsPanel's Accept/Reject selected-state coloring still works after migration
+- [x] 3.3 All 5 confirm dialogs (cards, review-reset, cancel-deletion, delete-account, deck-delete) open, confirm, and cancel correctly and look visually identical to each other
+- [x] 3.4 Every migrated button shows correct hover/disabled/focus states
+- [x] 3.5 GenerateFlashcardsPanel's Accept/Reject selected-state coloring still works after migration
 
 ### Phase 4: Shared Loading/Empty/Inline-Error State Components
 

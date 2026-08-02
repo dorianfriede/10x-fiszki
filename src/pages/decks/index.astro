@@ -49,7 +49,7 @@ const { data: decks, error: decksError } = supabase
                     class="delete-deck-form"
                     data-deck-name={deck.name}
                   >
-                    <button type="submit" class="text-sm text-red-300 transition hover:text-red-200">
+                    <button type="submit" class="cursor-pointer text-sm text-red-300 transition hover:text-red-200">
                       Delete
                     </button>
                   </form>
@@ -75,14 +75,14 @@ const { data: decks, error: decksError } = supabase
       <button
         type="button"
         id="delete-confirm-cancel"
-        class="rounded-lg px-4 py-2 text-sm text-blue-100/80 transition hover:text-white"
+        class="focus-visible:ring-ring/50 inline-flex h-9 cursor-pointer items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-150 outline-none hover:bg-white/10 focus-visible:ring-[3px]"
       >
         Cancel
       </button>
       <button
         type="button"
         id="delete-confirm-submit"
-        class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-500"
+        class="inline-flex h-9 cursor-pointer items-center justify-center rounded-md border border-red-500/40 bg-red-600/15 px-4 py-2 text-sm font-medium text-red-100 shadow-xs transition-colors duration-150 outline-none hover:bg-red-600/25 focus-visible:ring-[3px] focus-visible:ring-red-500/20"
       >
         Delete
       </button>

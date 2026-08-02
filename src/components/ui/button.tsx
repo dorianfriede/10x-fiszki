@@ -5,14 +5,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-red-500/20 aria-invalid:border-red-500",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors duration-150 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-red-500/20 aria-invalid:border-red-500",
   {
     variants: {
       variant: {
-        default: "bg-purple-600 text-white shadow-xs hover:bg-purple-500",
-        destructive: "bg-red-600 text-white shadow-xs hover:bg-red-500 focus-visible:ring-red-500/20",
+        default: "border border-purple-500/40 bg-purple-600/15 text-purple-100 shadow-xs hover:bg-purple-600/25",
+        destructive:
+          "border border-red-500/40 bg-red-600/15 text-red-100 shadow-xs hover:bg-red-600/25 focus-visible:ring-red-500/20",
         outline: "border border-white/20 text-white shadow-xs hover:bg-white/10",
-        secondary: "bg-white/10 text-white shadow-xs hover:bg-white/20",
+        secondary: "border border-white/15 bg-white/10 text-white shadow-xs hover:bg-white/20",
         ghost: "text-white hover:bg-white/10",
         link: "text-purple-300 underline-offset-4 hover:underline",
       },

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CircleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const PAGE_SIZE = 25;
 const MAX_FIELD_LENGTH = 2000;
@@ -33,7 +34,6 @@ export default function CardListPanel({ deckId }: Props) {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const isMountedRef = useRef(true);
-  const deleteDialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     return () => {
@@ -145,13 +145,11 @@ export default function CardListPanel({ deckId }: Props) {
   function openDeleteConfirm(card: Card) {
     setPendingDelete(card);
     setDeleteError(null);
-    deleteDialogRef.current?.showModal();
   }
 
   function closeDeleteConfirm() {
     setPendingDelete(null);
     setDeleteError(null);
-    deleteDialogRef.current?.close();
   }
 
   async function confirmDelete() {
@@ -175,7 +173,6 @@ export default function CardListPanel({ deckId }: Props) {
       const remainingOnPage = cards.filter((card) => card.id !== cardId).length;
 
       setPendingDelete(null);
-      deleteDialogRef.current?.close();
       setCards((current) => current.filter((card) => card.id !== cardId));
       setTotal((current) => current - 1);
       if (remainingOnPage === 0 && page > 1) {
@@ -253,20 +250,10 @@ export default function CardListPanel({ deckId }: Props) {
                   )}
 
                   <div className="mt-4 flex gap-2">
-                    <Button
-                      type="button"
-                      disabled={isSavingEdit}
-                      onClick={() => void saveEdit(card.id)}
-                      className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500"
-                    >
+                    <Button type="button" disabled={isSavingEdit} onClick={() => void saveEdit(card.id)}>
                       {isSavingEdit ? "Saving..." : "Save"}
                     </Button>
-                    <Button
-                      type="button"
-                      disabled={isSavingEdit}
-                      onClick={cancelEdit}
-                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
-                    >
+                    <Button type="button" variant="secondary" disabled={isSavingEdit} onClick={cancelEdit}>
                       Cancel
                     </Button>
                   </div>
@@ -281,19 +268,20 @@ export default function CardListPanel({ deckId }: Props) {
                   <div className="mt-4 flex gap-2">
                     <Button
                       type="button"
+                      variant="secondary"
                       onClick={() => {
                         startEdit(card);
                       }}
-                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
                     >
                       Edit
                     </Button>
                     <Button
                       type="button"
+                      variant="ghost"
+                      className="text-red-300"
                       onClick={() => {
                         openDeleteConfirm(card);
                       }}
-                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
                     >
                       Delete
                     </Button>
@@ -306,11 +294,11 @@ export default function CardListPanel({ deckId }: Props) {
           <div className="flex items-center justify-between">
             <Button
               type="button"
+              variant="secondary"
               disabled={page <= 1}
               onClick={() => {
                 setPage((current) => current - 1);
               }}
-              className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 disabled:opacity-40"
             >
               Prev
             </Button>
@@ -319,11 +307,11 @@ export default function CardListPanel({ deckId }: Props) {
             </span>
             <Button
               type="button"
+              variant="secondary"
               disabled={page >= totalPages}
               onClick={() => {
                 setPage((current) => current + 1);
               }}
-              className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 disabled:opacity-40"
             >
               Next
             </Button>
@@ -335,50 +323,22 @@ export default function CardListPanel({ deckId }: Props) {
         ← Decks
       </a>
 
-      <dialog
-        ref={deleteDialogRef}
-        onCancel={() => {
-          setPendingDelete(null);
-          setDeleteError(null);
-        }}
-        onClick={(e) => {
-          if (e.target === deleteDialogRef.current && !isDeleting) {
-            closeDeleteConfirm();
-          }
-        }}
-        className="fixed top-1/2 left-1/2 m-0 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-slate-900/95 p-6 text-white backdrop:bg-black/60 backdrop:backdrop-blur-sm"
-      >
-        <p className="mb-6 text-blue-100/80">
-          Delete card <span className="font-semibold text-white">&quot;{pendingDelete?.front}&quot;</span>? This cannot
-          be undone.
-        </p>
-
-        {deleteError && (
-          <p className="mb-4 flex items-center gap-1 text-sm text-red-300">
-            <CircleAlert className="size-4 shrink-0" />
-            {deleteError}
-          </p>
-        )}
-
-        <div className="flex justify-end gap-3">
-          <Button
-            type="button"
-            disabled={isDeleting}
-            onClick={closeDeleteConfirm}
-            className="rounded-lg px-4 py-2 text-sm text-blue-100/80 transition hover:text-white"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            disabled={isDeleting}
-            onClick={() => void confirmDelete()}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-500"
-          >
-            {isDeleting ? "Deleting..." : "Delete"}
-          </Button>
-        </div>
-      </dialog>
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        description={
+          <>
+            Delete card <span className="font-semibold text-white">&quot;{pendingDelete?.front}&quot;</span>? This
+            cannot be undone.
+          </>
+        }
+        confirmLabel={isDeleting ? "Deleting..." : "Delete"}
+        cancelLabel="Cancel"
+        danger
+        isPending={isDeleting}
+        error={deleteError}
+        onConfirm={() => void confirmDelete()}
+        onCancel={closeDeleteConfirm}
+      />
     </div>
   );
 }

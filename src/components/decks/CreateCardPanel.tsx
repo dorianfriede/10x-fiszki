@@ -129,12 +129,7 @@ export default function CreateCardPanel({ deckId }: Props) {
           </p>
         )}
 
-        <Button
-          type="button"
-          disabled={isSaving}
-          onClick={handleSubmit}
-          className="mt-4 w-full rounded-lg bg-purple-600 px-4 py-2 font-medium text-white transition-colors hover:bg-purple-500"
-        >
+        <Button type="button" className="mt-4 w-full" disabled={isSaving} onClick={handleSubmit}>
           {isSaving ? "Adding..." : "Add card"}
         </Button>
       </div>

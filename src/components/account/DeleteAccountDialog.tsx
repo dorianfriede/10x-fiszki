@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormField } from "@/components/auth/FormField";
 import { ServerError } from "@/components/auth/ServerError";
 
@@ -10,75 +11,57 @@ interface Props {
 }
 
 export default function DeleteAccountDialog({ email, serverError }: Props) {
+  const [isOpen, setIsOpen] = useState(() => !!serverError);
   const [confirmText, setConfirmText] = useState("");
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const canDelete = confirmText === email;
-
-  useEffect(() => {
-    if (serverError) {
-      dialogRef.current?.showModal();
-    }
-  }, [serverError]);
 
   function openDialog() {
     setConfirmText("");
-    dialogRef.current?.showModal();
-  }
-
-  function closeDialog() {
-    dialogRef.current?.close();
+    setIsOpen(true);
   }
 
   return (
     <div>
-      <Button
-        type="button"
-        onClick={openDialog}
-        className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
-      >
+      <Button type="button" variant="ghost" className="text-red-300" onClick={openDialog}>
         Delete account
       </Button>
 
-      <dialog
-        ref={dialogRef}
-        onCancel={closeDialog}
-        onClick={(e) => {
-          if (e.target === dialogRef.current) closeDialog();
-        }}
-        className="fixed top-1/2 left-1/2 m-0 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-slate-900/95 p-6 text-white backdrop:bg-black/60 backdrop:backdrop-blur-sm"
-      >
-        <p className="mb-4 text-blue-100/80">
-          This permanently deletes your account and all your decks and cards after a 30-day window. Type{" "}
-          <span className="font-semibold text-white">{email}</span> to confirm.
-        </p>
+      <form method="POST" action="/api/account/delete">
+        <ConfirmDialog
+          open={isOpen}
+          description={
+            <>
+              <p className="mb-4">
+                This permanently deletes your account and all your decks and cards after a 30-day window. Type{" "}
+                <span className="font-semibold text-white">{email}</span> to confirm.
+              </p>
 
-        <form method="POST" action="/api/account/delete" className="space-y-4">
-          <FormField
-            id="confirm-email"
-            name="confirmEmail"
-            label="Email"
-            value={confirmText}
-            onChange={setConfirmText}
-            placeholder={email}
-            icon={<Mail className="size-4" />}
-          />
+              <FormField
+                id="confirm-email"
+                name="confirmEmail"
+                label="Email"
+                value={confirmText}
+                onChange={setConfirmText}
+                placeholder={email}
+                icon={<Mail className="size-4" />}
+              />
 
-          <ServerError message={serverError} />
-
-          <div className="flex justify-end gap-3">
-            <Button
-              type="button"
-              onClick={closeDialog}
-              className="rounded-lg px-4 py-2 text-sm text-blue-100/80 transition hover:text-white"
-            >
-              Cancel
-            </Button>
-            <Button type="submit" variant="destructive" disabled={!canDelete}>
-              Delete my account
-            </Button>
-          </div>
-        </form>
-      </dialog>
+              {serverError && (
+                <div className="mt-3">
+                  <ServerError message={serverError} />
+                </div>
+              )}
+            </>
+          }
+          confirmLabel="Delete my account"
+          cancelLabel="Cancel"
+          danger
+          confirmDisabled={!canDelete}
+          onCancel={() => {
+            setIsOpen(false);
+          }}
+        />
+      </form>
     </div>
   );
 }

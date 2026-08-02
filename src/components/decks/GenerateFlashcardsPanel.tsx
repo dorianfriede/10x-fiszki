@@ -204,12 +204,7 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
           </p>
         )}
 
-        <Button
-          type="button"
-          disabled={isGenerating}
-          onClick={handleGenerate}
-          className="mt-4 w-full rounded-lg bg-purple-600 px-4 py-2 font-medium text-white transition-colors hover:bg-purple-500"
-        >
+        <Button type="button" className="mt-4 w-full" disabled={isGenerating} onClick={handleGenerate}>
           {isGenerating ? (
             <span className="flex items-center gap-2">
               <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -230,11 +225,7 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
             <CircleAlert className="size-4 shrink-0" />
             {generationError}
           </span>
-          <Button
-            type="button"
-            onClick={handleGenerate}
-            className="shrink-0 rounded-lg bg-white/10 px-3 py-1.5 text-white transition-colors hover:bg-white/20"
-          >
+          <Button type="button" variant="secondary" size="sm" className="shrink-0" onClick={handleGenerate}>
             <RefreshCw className="size-4" />
             Try again
           </Button>
@@ -250,20 +241,10 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
       {proposals && proposals.length > 0 && (
         <>
           <div className="flex gap-2">
-            <Button
-              type="button"
-              disabled={isSaving}
-              onClick={acceptAll}
-              className="rounded-lg bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
-            >
+            <Button type="button" variant="secondary" size="sm" disabled={isSaving} onClick={acceptAll}>
               Accept all
             </Button>
-            <Button
-              type="button"
-              disabled={isSaving}
-              onClick={rejectAll}
-              className="rounded-lg bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
-            >
+            <Button type="button" variant="secondary" size="sm" disabled={isSaving} onClick={rejectAll}>
               Reject all
             </Button>
           </div>
@@ -279,30 +260,24 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
                 <div className="flex gap-2">
                   <Button
                     type="button"
+                    variant="secondary"
+                    size="sm"
+                    className={cn(proposal.decision === "accepted" && "bg-emerald-600 text-white hover:bg-emerald-500")}
                     onClick={() => {
                       setDecision(index, "accepted");
                     }}
-                    className={cn(
-                      "rounded-lg px-3 py-1.5 transition-colors",
-                      proposal.decision === "accepted"
-                        ? "bg-emerald-600 text-white hover:bg-emerald-500"
-                        : "bg-white/10 text-white hover:bg-white/20",
-                    )}
                   >
                     <Check className="size-4" />
                     Accept
                   </Button>
                   <Button
                     type="button"
+                    variant="secondary"
+                    size="sm"
+                    className={cn(proposal.decision === "rejected" && "bg-red-600 text-white hover:bg-red-500")}
                     onClick={() => {
                       setDecision(index, "rejected");
                     }}
-                    className={cn(
-                      "rounded-lg px-3 py-1.5 transition-colors",
-                      proposal.decision === "rejected"
-                        ? "bg-red-600 text-white hover:bg-red-500"
-                        : "bg-white/10 text-white hover:bg-white/20",
-                    )}
                   >
                     <X className="size-4" />
                     Reject
@@ -328,9 +303,9 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
 
           <Button
             type="button"
+            className="w-full"
             disabled={isSaving || invalidAcceptedIndices.size > 0}
             onClick={handleSave}
-            className="w-full rounded-lg bg-purple-600 px-4 py-2 font-medium text-white transition-colors hover:bg-purple-500"
           >
             {isSaving
               ? "Saving..."
