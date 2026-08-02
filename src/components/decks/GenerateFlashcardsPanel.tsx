@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const MAX_TEXT_LENGTH = 10_000;
+const MAX_FIELD_LENGTH = 2000;
 
 interface Proposal {
   front: string;
@@ -93,10 +94,38 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
     );
   }
 
+  function acceptAll() {
+    setProposals((current) => current?.map((proposal) => ({ ...proposal, decision: "accepted" })) ?? null);
+  }
+
+  function rejectAll() {
+    setProposals((current) => current?.map((proposal) => ({ ...proposal, decision: "rejected" })) ?? null);
+  }
+
+  function isValidProposalField(value: string): boolean {
+    return value.trim().length > 0 && value.length <= MAX_FIELD_LENGTH;
+  }
+
   const acceptedProposals = proposals?.filter((proposal) => proposal.decision === "accepted") ?? [];
 
+  const invalidAcceptedIndices = new Set(
+    (proposals ?? [])
+      .map((proposal, index) => ({ proposal, index }))
+      .filter(
+        ({ proposal }) =>
+          proposal.decision === "accepted" &&
+          !(isValidProposalField(proposal.front) && isValidProposalField(proposal.back)),
+      )
+      .map(({ index }) => index),
+  );
+
   async function handleSave() {
-    if (isSaving || acceptedProposals.length === 0) return;
+    if (isSaving) return;
+
+    if (acceptedProposals.length === 0) {
+      window.location.href = "/decks";
+      return;
+    }
 
     setSaveError(null);
     setIsSaving(true);
@@ -220,6 +249,25 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
 
       {proposals && proposals.length > 0 && (
         <>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              disabled={isSaving}
+              onClick={acceptAll}
+              className="rounded-lg bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
+            >
+              Accept all
+            </Button>
+            <Button
+              type="button"
+              disabled={isSaving}
+              onClick={rejectAll}
+              className="rounded-lg bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
+            >
+              Reject all
+            </Button>
+          </div>
+
           <ul className="space-y-3">
             {proposals.map((proposal, index) => (
               <li key={index} className="rounded-xl border border-white/10 bg-white/5 p-4 text-white">
@@ -260,6 +308,13 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
                     Reject
                   </Button>
                 </div>
+
+                {invalidAcceptedIndices.has(index) && (
+                  <p className="mt-2 flex items-center gap-1 text-xs text-red-300">
+                    <CircleAlert className="size-3" />
+                    This card is too long to save — reject it to continue
+                  </p>
+                )}
               </li>
             ))}
           </ul>
@@ -273,7 +328,7 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
 
           <Button
             type="button"
-            disabled={acceptedProposals.length === 0 || isSaving}
+            disabled={isSaving || invalidAcceptedIndices.size > 0}
             onClick={handleSave}
             className="w-full rounded-lg bg-purple-600 px-4 py-2 font-medium text-white transition-colors hover:bg-purple-500"
           >

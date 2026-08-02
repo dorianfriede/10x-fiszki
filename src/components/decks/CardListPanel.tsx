@@ -342,7 +342,7 @@ export default function CardListPanel({ deckId }: Props) {
           setDeleteError(null);
         }}
         onClick={(e) => {
-          if (e.target === deleteDialogRef.current) {
+          if (e.target === deleteDialogRef.current && !isDeleting) {
             closeDeleteConfirm();
           }
         }}

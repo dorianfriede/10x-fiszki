@@ -65,6 +65,10 @@ Add "Accept all" / "Reject all" actions to the candidate review list, and catch 
 
 **Contract**: Compute a derived `invalidAcceptedIndices` value on every render — the same style as the existing `acceptedProposals` derivation (`GenerateFlashcardsPanel.tsx:96`), not state set inside `handleSave` — by filtering `proposals` for `decision === "accepted"` items that fail the same rule the server enforces (`cards.ts:9-20`: non-empty trimmed, ≤2000 chars front/back). Render an inline warning on each list item whose index is in `invalidAcceptedIndices` ("This card is too long to save — reject it to continue"), live as decisions change — no save attempt required to trigger it. The save button's `disabled` condition becomes `isSaving || acceptedProposals.length === 0 || invalidAcceptedIndices.size > 0`, so it re-enables the moment the user rejects the offending proposal. `handleSave` itself needs no separate abort check — the disabled attribute already prevents the click path from firing while any accepted proposal is invalid.
 
+### Addendum (found during impl review, 2026-08-02)
+
+The "Contract" above specifies the save button's `disabled` condition as `isSaving || acceptedProposals.length === 0 || invalidAcceptedIndices.size > 0`. The shipped implementation (17eb00d) instead drops the `acceptedProposals.length === 0` clause and repurposes a click in that state as a redirect to `/decks` (discovered as a UX dead-end during Phase 1 manual verification: rejecting every proposal left no way to leave the page via this button). Confirmed design decision: the button keeps reading "Save 0 cards" in that state — no separate label — and the click still redirects to `/decks` instead of saving (impl review F1, fixed via Fix B, label choice revisited 2026-08-02). Kept as designed — `disabled` intentionally no longer includes the zero-accepted clause.
+
 ### Success Criteria:
 
 #### Automated Verification:
@@ -165,30 +169,30 @@ No schema changes — both phases work entirely within the existing `cards` tabl
 
 #### Automated
 
-- [ ] 1.1 Type checking passes
-- [ ] 1.2 Linting passes
-- [ ] 1.3 Build succeeds
+- [x] 1.1 Type checking passes — 17eb00d
+- [x] 1.2 Linting passes — 17eb00d
+- [x] 1.3 Build succeeds — 17eb00d
 
 #### Manual
 
-- [ ] 1.4 "Accept all" marks every proposal accepted
-- [ ] 1.5 "Reject all" marks every proposal rejected, including previously accepted ones
-- [ ] 1.6 Individual toggle after a bulk action still works on a single item
-- [ ] 1.7 Oversized/empty accepted proposal shows inline warning and blocks save
-- [ ] 1.8 Normal save (no invalid proposals) still works unchanged
+- [x] 1.4 "Accept all" marks every proposal accepted — 17eb00d
+- [x] 1.5 "Reject all" marks every proposal rejected, including previously accepted ones — 17eb00d
+- [x] 1.6 Individual toggle after a bulk action still works on a single item — 17eb00d
+- [x] 1.7 Oversized/empty accepted proposal shows inline warning and blocks save — 17eb00d
+- [x] 1.8 Normal save (no invalid proposals) still works unchanged — 17eb00d
 
 ### Phase 2: Reset an in-progress review session
 
 #### Automated
 
-- [ ] 2.1 Type checking passes
-- [ ] 2.2 Linting passes
-- [ ] 2.3 Build succeeds
+- [x] 2.1 Type checking passes — 6b63f57
+- [x] 2.2 Linting passes — 6b63f57
+- [x] 2.3 Build succeeds — 6b63f57
 
 #### Manual
 
-- [ ] 2.4 Reset restores rated cards' due dates/FSRS state
-- [ ] 2.5 Reset restores cards across multiple "Continue reviewing" batches
-- [ ] 2.6 Reset button disabled while a rating request is in flight
-- [ ] 2.7 Reset button hidden when zero ratings made this mount
-- [ ] 2.8 Post-reset, due queue reloads fresh starting at card 1
+- [x] 2.4 Reset restores rated cards' due dates/FSRS state — 6b63f57
+- [x] 2.5 Reset restores cards across multiple "Continue reviewing" batches — 6b63f57
+- [x] 2.6 Reset button disabled while a rating request is in flight — 6b63f57
+- [x] 2.7 Reset button hidden when zero ratings made this mount — 6b63f57
+- [x] 2.8 Post-reset, due queue reloads fresh starting at card 1 — 6b63f57
