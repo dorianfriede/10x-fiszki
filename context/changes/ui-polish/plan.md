@@ -425,11 +425,11 @@ No data migration. `Welcome.astro` is deleted in Phase 5; confirm no page other 
 
 #### Automated
 
-- [ ] 6.1 Lint passes: `npm run lint`
-- [ ] 6.2 Build passes: `npm run build`
+- [x] 6.1 Lint passes: `npm run lint`
+- [x] 6.2 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 6.3 `confirm-email.astro` shows icons, not emoji
-- [ ] 6.4 Deck-list Delete action visually matches the rest of the app's buttons
-- [ ] 6.5 Full click-through of all 12 screens shows no remaining archetype stragglers and no regressions introduced by Phases 1-5
+- [x] 6.3 `confirm-email.astro` shows icons, not emoji
+- [x] 6.4 Deck-list Delete action visually matches the rest of the app's buttons
+- [x] 6.5 Full click-through of all 12 screens shows no remaining archetype stragglers and no regressions introduced by Phases 1-5
