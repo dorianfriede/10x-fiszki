@@ -181,14 +181,14 @@ No schema changes — both phases work entirely within the existing `cards` tabl
 
 #### Automated
 
-- [x] 2.1 Type checking passes
-- [x] 2.2 Linting passes
-- [x] 2.3 Build succeeds
+- [x] 2.1 Type checking passes — 6b63f57
+- [x] 2.2 Linting passes — 6b63f57
+- [x] 2.3 Build succeeds — 6b63f57
 
 #### Manual
 
-- [x] 2.4 Reset restores rated cards' due dates/FSRS state
-- [x] 2.5 Reset restores cards across multiple "Continue reviewing" batches
-- [x] 2.6 Reset button disabled while a rating request is in flight
-- [x] 2.7 Reset button hidden when zero ratings made this mount
-- [x] 2.8 Post-reset, due queue reloads fresh starting at card 1
+- [x] 2.4 Reset restores rated cards' due dates/FSRS state — 6b63f57
+- [x] 2.5 Reset restores cards across multiple "Continue reviewing" batches — 6b63f57
+- [x] 2.6 Reset button disabled while a rating request is in flight — 6b63f57
+- [x] 2.7 Reset button hidden when zero ratings made this mount — 6b63f57
+- [x] 2.8 Post-reset, due queue reloads fresh starting at card 1 — 6b63f57
