@@ -242,9 +242,9 @@ The purge job is the only mechanism that removes expired accounts and has no ale
 
 #### Automated
 
-- [ ] 1.1 `supabase db push` completes successfully against the linked cloud project
-- [ ] 1.2 `npx astro check` passes
-- [ ] 1.3 `npm run lint` passes
+- [x] 1.1 `supabase db push` completes successfully against the linked cloud project
+- [x] 1.2 `npx astro check` passes
+- [x] 1.3 `npm run lint` passes
 
 #### Manual
 

@@ -39,6 +39,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_deletion_requests: {
+        Row: {
+          requested_at: string
+          user_id: string
+        }
+        Insert: {
+          requested_at?: string
+          user_id: string
+        }
+        Update: {
+          requested_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       cards: {
         Row: {
           back: string
