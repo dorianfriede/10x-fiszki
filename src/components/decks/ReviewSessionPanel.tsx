@@ -57,8 +57,13 @@ export default function ReviewSessionPanel({ deckId }: Props) {
   const [isRating, setIsRating] = useState(false);
   const [rateError, setRateError] = useState<string | null>(null);
   const [remainingDue, setRemainingDue] = useState<number | null>(null);
+  const [ratedSnapshots, setRatedSnapshots] = useState<Map<string, FsrsFields>>(new Map());
+  const [isResetting, setIsResetting] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [partialResetMessage, setPartialResetMessage] = useState<string | null>(null);
   const isMountedRef = useRef(true);
   const localSchedulerRef = useRef(fsrs(generatorParameters({ enable_short_term: false })));
+  const resetDialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     return () => {
@@ -135,6 +140,24 @@ export default function ReviewSessionPanel({ deckId }: Props) {
     if (isRating || currentIndex >= cards.length) return;
     const currentCard = cards[currentIndex];
 
+    setRatedSnapshots((current) => {
+      if (current.has(currentCard.id)) return current;
+      const next = new Map(current);
+      next.set(currentCard.id, {
+        due: currentCard.due,
+        stability: currentCard.stability,
+        difficulty: currentCard.difficulty,
+        elapsed_days: currentCard.elapsed_days,
+        scheduled_days: currentCard.scheduled_days,
+        learning_steps: currentCard.learning_steps,
+        reps: currentCard.reps,
+        lapses: currentCard.lapses,
+        state: currentCard.state,
+        last_review: currentCard.last_review,
+      });
+      return next;
+    });
+
     setIsRating(true);
     setRateError(null);
 
@@ -171,6 +194,112 @@ export default function ReviewSessionPanel({ deckId }: Props) {
     }
   }
 
+  function openResetConfirm() {
+    setResetError(null);
+    resetDialogRef.current?.showModal();
+  }
+
+  function closeResetConfirm() {
+    setResetError(null);
+    resetDialogRef.current?.close();
+  }
+
+  async function confirmReset() {
+    if (isResetting || ratedSnapshots.size === 0) return;
+
+    setIsResetting(true);
+    setResetError(null);
+
+    try {
+      const payload = Array.from(ratedSnapshots.entries()).map(([cardId, fields]) => ({ id: cardId, ...fields }));
+
+      const response = await fetch(`/api/decks/${deckId}/review-reset`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cards: payload }),
+      });
+
+      const data = (await response.json()) as { restored?: number; total?: number; error?: string };
+
+      if (!isMountedRef.current) return;
+
+      if (!response.ok) {
+        setResetError(data.error ?? "Could not reset the session");
+        return;
+      }
+
+      const restored = data.restored ?? 0;
+      const total = data.total ?? payload.length;
+
+      if (restored < total) {
+        setPartialResetMessage(`${restored} of ${total} cards restored — click Reset session again to retry the rest`);
+        return;
+      }
+
+      setPartialResetMessage(null);
+      setRatedSnapshots(new Map());
+      setRateError(null);
+      resetDialogRef.current?.close();
+      await continueReviewing();
+    } catch {
+      if (!isMountedRef.current) return;
+      setResetError("Could not reach the server");
+    } finally {
+      if (isMountedRef.current) setIsResetting(false);
+    }
+  }
+
+  const resetDialog = (
+    <dialog
+      ref={resetDialogRef}
+      onCancel={() => {
+        setResetError(null);
+      }}
+      onClick={(e) => {
+        if (e.target === resetDialogRef.current) closeResetConfirm();
+      }}
+      className="fixed top-1/2 left-1/2 m-0 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-slate-900/95 p-6 text-white backdrop:bg-black/60 backdrop:backdrop-blur-sm"
+    >
+      <p className="mb-6 text-blue-100/80">
+        Undo {pluralize(ratedSnapshots.size, "rating")} from this session? Affected cards will return to their
+        pre-rating due dates. This cannot be undone.
+      </p>
+
+      {partialResetMessage && (
+        <p className="mb-4 flex items-center gap-1 text-sm text-amber-300">
+          <CircleAlert className="size-4 shrink-0" />
+          {partialResetMessage}
+        </p>
+      )}
+
+      {resetError && (
+        <p className="mb-4 flex items-center gap-1 text-sm text-red-300">
+          <CircleAlert className="size-4 shrink-0" />
+          {resetError}
+        </p>
+      )}
+
+      <div className="flex justify-end gap-3">
+        <Button
+          type="button"
+          disabled={isResetting}
+          onClick={closeResetConfirm}
+          className="rounded-lg px-4 py-2 text-sm text-blue-100/80 transition hover:text-white"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          disabled={isResetting}
+          onClick={() => void confirmReset()}
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-500"
+        >
+          {isResetting ? "Resetting..." : "Reset session"}
+        </Button>
+      </div>
+    </dialog>
+  );
+
   if (isLoading) {
     return <p className="text-blue-100/60">Loading review session...</p>;
   }
@@ -200,9 +329,21 @@ export default function ReviewSessionPanel({ deckId }: Props) {
       return (
         <div className="space-y-4">
           <p className="text-center text-blue-100/60">Session complete.</p>
-          <a href="/decks" className="inline-block text-sm text-blue-200 transition hover:text-blue-100">
-            ← Decks
-          </a>
+          <div className="flex justify-center gap-3">
+            <a href="/decks" className="inline-block text-sm text-blue-200 transition hover:text-blue-100">
+              ← Decks
+            </a>
+            {ratedSnapshots.size > 0 && (
+              <Button
+                type="button"
+                onClick={openResetConfirm}
+                className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
+              >
+                Reset session
+              </Button>
+            )}
+          </div>
+          {resetDialog}
         </div>
       );
     }
@@ -227,7 +368,17 @@ export default function ReviewSessionPanel({ deckId }: Props) {
           >
             Continue reviewing
           </Button>
+          {ratedSnapshots.size > 0 && (
+            <Button
+              type="button"
+              onClick={openResetConfirm}
+              className="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
+            >
+              Reset session
+            </Button>
+          )}
         </div>
+        {resetDialog}
       </div>
     );
   }
@@ -281,11 +432,24 @@ export default function ReviewSessionPanel({ deckId }: Props) {
             {rateError}
           </p>
         )}
+
+        {ratedSnapshots.size > 0 && (
+          <Button
+            type="button"
+            disabled={isRating}
+            onClick={openResetConfirm}
+            className="mt-4 rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-white/20"
+          >
+            Reset session
+          </Button>
+        )}
       </div>
 
       <p className="text-center text-xs text-blue-100/40">
         Card {currentIndex + 1} of {cards.length}
       </p>
+
+      {resetDialog}
     </div>
   );
 }

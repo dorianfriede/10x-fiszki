@@ -165,30 +165,30 @@ No schema changes — both phases work entirely within the existing `cards` tabl
 
 #### Automated
 
-- [x] 1.1 Type checking passes
-- [x] 1.2 Linting passes
-- [x] 1.3 Build succeeds
+- [x] 1.1 Type checking passes — 17eb00d
+- [x] 1.2 Linting passes — 17eb00d
+- [x] 1.3 Build succeeds — 17eb00d
 
 #### Manual
 
-- [x] 1.4 "Accept all" marks every proposal accepted
-- [x] 1.5 "Reject all" marks every proposal rejected, including previously accepted ones
-- [x] 1.6 Individual toggle after a bulk action still works on a single item
-- [x] 1.7 Oversized/empty accepted proposal shows inline warning and blocks save
-- [x] 1.8 Normal save (no invalid proposals) still works unchanged
+- [x] 1.4 "Accept all" marks every proposal accepted — 17eb00d
+- [x] 1.5 "Reject all" marks every proposal rejected, including previously accepted ones — 17eb00d
+- [x] 1.6 Individual toggle after a bulk action still works on a single item — 17eb00d
+- [x] 1.7 Oversized/empty accepted proposal shows inline warning and blocks save — 17eb00d
+- [x] 1.8 Normal save (no invalid proposals) still works unchanged — 17eb00d
 
 ### Phase 2: Reset an in-progress review session
 
 #### Automated
 
-- [ ] 2.1 Type checking passes
-- [ ] 2.2 Linting passes
-- [ ] 2.3 Build succeeds
+- [x] 2.1 Type checking passes
+- [x] 2.2 Linting passes
+- [x] 2.3 Build succeeds
 
 #### Manual
 
-- [ ] 2.4 Reset restores rated cards' due dates/FSRS state
-- [ ] 2.5 Reset restores cards across multiple "Continue reviewing" batches
-- [ ] 2.6 Reset button disabled while a rating request is in flight
-- [ ] 2.7 Reset button hidden when zero ratings made this mount
-- [ ] 2.8 Post-reset, due queue reloads fresh starting at card 1
+- [x] 2.4 Reset restores rated cards' due dates/FSRS state
+- [x] 2.5 Reset restores cards across multiple "Continue reviewing" batches
+- [x] 2.6 Reset button disabled while a rating request is in flight
+- [x] 2.7 Reset button hidden when zero ratings made this mount
+- [x] 2.8 Post-reset, due queue reloads fresh starting at card 1
