@@ -413,13 +413,13 @@ No data migration. `Welcome.astro` is deleted in Phase 5; confirm no page other 
 
 #### Automated
 
-- [x] 5.1 Lint passes: `npm run lint`
-- [x] 5.2 Build passes: `npm run build`
+- [x] 5.1 Lint passes: `npm run lint` — 398c713
+- [x] 5.2 Build passes: `npm run build` — 398c713
 
 #### Manual
 
-- [x] 5.3 Homepage no longer resembles the stock Astro starter template; CTAs navigate to `/auth/signin` and `/auth/signup` correctly
-- [x] 5.4 Dashboard's heading and Sign out button now match account/auth pages' look
+- [x] 5.3 Homepage no longer resembles the stock Astro starter template; CTAs navigate to `/auth/signin` and `/auth/signup` correctly — 398c713
+- [x] 5.4 Dashboard's heading and Sign out button now match account/auth pages' look — 398c713
 
 ### Phase 6: Final Consistency Sweep & Cross-Screen QA
 
