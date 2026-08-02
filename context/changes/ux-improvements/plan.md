@@ -65,6 +65,10 @@ Add "Accept all" / "Reject all" actions to the candidate review list, and catch 
 
 **Contract**: Compute a derived `invalidAcceptedIndices` value on every render — the same style as the existing `acceptedProposals` derivation (`GenerateFlashcardsPanel.tsx:96`), not state set inside `handleSave` — by filtering `proposals` for `decision === "accepted"` items that fail the same rule the server enforces (`cards.ts:9-20`: non-empty trimmed, ≤2000 chars front/back). Render an inline warning on each list item whose index is in `invalidAcceptedIndices` ("This card is too long to save — reject it to continue"), live as decisions change — no save attempt required to trigger it. The save button's `disabled` condition becomes `isSaving || acceptedProposals.length === 0 || invalidAcceptedIndices.size > 0`, so it re-enables the moment the user rejects the offending proposal. `handleSave` itself needs no separate abort check — the disabled attribute already prevents the click path from firing while any accepted proposal is invalid.
 
+### Addendum (found during impl review, 2026-08-02)
+
+The "Contract" above specifies the save button's `disabled` condition as `isSaving || acceptedProposals.length === 0 || invalidAcceptedIndices.size > 0`. The shipped implementation (17eb00d) instead drops the `acceptedProposals.length === 0` clause and repurposes a click in that state as a redirect to `/decks` (discovered as a UX dead-end during Phase 1 manual verification: rejecting every proposal left no way to leave the page via this button). Confirmed design decision: the button keeps reading "Save 0 cards" in that state — no separate label — and the click still redirects to `/decks` instead of saving (impl review F1, fixed via Fix B, label choice revisited 2026-08-02). Kept as designed — `disabled` intentionally no longer includes the zero-accepted clause.
+
 ### Success Criteria:
 
 #### Automated Verification:

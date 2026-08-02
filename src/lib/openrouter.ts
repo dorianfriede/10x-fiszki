@@ -88,6 +88,10 @@ export async function generateFlashcards(sourceText: string): Promise<{ proposal
       console.error("openrouter call failed", { reason: "timeout" });
       throw new GenerationError("The AI service took too long to respond");
     }
+    if (err instanceof SyntaxError) {
+      console.error("openrouter call failed", { reason: "unexpected response shape" });
+      throw new GenerationError("The AI service returned an unexpected response");
+    }
     console.error("openrouter call failed", { reason: "network error" });
     throw new GenerationError("Could not reach the AI service");
   }

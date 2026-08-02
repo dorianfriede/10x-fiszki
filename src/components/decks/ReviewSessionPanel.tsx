@@ -196,6 +196,7 @@ export default function ReviewSessionPanel({ deckId }: Props) {
 
   function openResetConfirm() {
     setResetError(null);
+    setPartialResetMessage(null);
     resetDialogRef.current?.showModal();
   }
 
@@ -256,7 +257,7 @@ export default function ReviewSessionPanel({ deckId }: Props) {
         setResetError(null);
       }}
       onClick={(e) => {
-        if (e.target === resetDialogRef.current) closeResetConfirm();
+        if (e.target === resetDialogRef.current && !isResetting) closeResetConfirm();
       }}
       className="fixed top-1/2 left-1/2 m-0 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-slate-900/95 p-6 text-white backdrop:bg-black/60 backdrop:backdrop-blur-sm"
     >

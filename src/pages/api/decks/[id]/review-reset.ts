@@ -1,6 +1,8 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 
+const SESSION_SIZE = 30;
+
 interface ResetCardInput {
   id: string;
   due: string;
@@ -76,8 +78,18 @@ export const POST: APIRoute = async (context) => {
   const body: unknown = await context.request.json().catch(() => null);
   const cards = body && typeof body === "object" ? (body as Record<string, unknown>).cards : undefined;
 
-  if (!Array.isArray(cards) || cards.length === 0 || !cards.every(isValidResetCard)) {
-    return new Response(JSON.stringify({ error: "Provide at least one card with valid FSRS field values" }), {
+  if (!Array.isArray(cards) || cards.length === 0 || cards.length > SESSION_SIZE || !cards.every(isValidResetCard)) {
+    return new Response(
+      JSON.stringify({ error: `Provide between 1 and ${SESSION_SIZE} cards with valid FSRS field values` }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+  }
+
+  if (new Set(cards.map((card) => card.id)).size !== cards.length) {
+    return new Response(JSON.stringify({ error: "Duplicate card ids in request" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
