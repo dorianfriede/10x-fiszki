@@ -3,6 +3,9 @@ import { CircleAlert } from "lucide-react";
 import { fsrs, generatorParameters, Rating, type Grade } from "ts-fsrs";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { LoadingState } from "@/components/ui/loading-state";
+import { EmptyState } from "@/components/ui/empty-state";
+import { InlineError } from "@/components/ui/inline-error";
 import { toFsrsCard, type FsrsFields } from "@/lib/fsrs";
 import type { Tables } from "@/db/database.types";
 
@@ -340,22 +343,17 @@ export default function ReviewSessionPanel({ deckId }: Props) {
   );
 
   if (isLoading) {
-    return <p className="text-blue-100/60">Loading review session...</p>;
+    return <LoadingState label="Loading review session..." />;
   }
 
   if (loadError) {
-    return (
-      <p className="flex items-center gap-1 text-sm text-red-300">
-        <CircleAlert className="size-4 shrink-0" />
-        {loadError}
-      </p>
-    );
+    return <InlineError message={loadError} />;
   }
 
   if (cards.length === 0) {
     return (
       <div className="space-y-4">
-        <p className="text-center text-blue-100/60">No cards due for review right now.</p>
+        <EmptyState>No cards due for review right now.</EmptyState>
         <a href="/decks" className="inline-block text-sm text-blue-200 transition hover:text-blue-100">
           ← Decks
         </a>
@@ -458,10 +456,9 @@ export default function ReviewSessionPanel({ deckId }: Props) {
         )}
 
         {rateError && (
-          <p className="mt-3 flex items-center gap-1 text-sm text-red-300">
-            <CircleAlert className="size-4 shrink-0" />
-            {rateError}
-          </p>
+          <div className="mt-3">
+            <InlineError message={rateError} />
+          </div>
         )}
 
         {ratedSnapshots.size > 0 && (

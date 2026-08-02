@@ -388,21 +388,21 @@ No data migration. `Welcome.astro` is deleted in Phase 5; confirm no page other 
 
 #### Automated
 
-- [x] 3.1 Lint passes: `npm run lint`
-- [x] 3.2 Build passes: `npm run build`
+- [x] 3.1 Lint passes: `npm run lint` — f3b7d29
+- [x] 3.2 Build passes: `npm run build` — f3b7d29
 
 #### Manual
 
-- [x] 3.3 All 5 confirm dialogs (cards, review-reset, cancel-deletion, delete-account, deck-delete) open, confirm, and cancel correctly and look visually identical to each other
-- [x] 3.4 Every migrated button shows correct hover/disabled/focus states
-- [x] 3.5 GenerateFlashcardsPanel's Accept/Reject selected-state coloring still works after migration
+- [x] 3.3 All 5 confirm dialogs (cards, review-reset, cancel-deletion, delete-account, deck-delete) open, confirm, and cancel correctly and look visually identical to each other — f3b7d29
+- [x] 3.4 Every migrated button shows correct hover/disabled/focus states — f3b7d29
+- [x] 3.5 GenerateFlashcardsPanel's Accept/Reject selected-state coloring still works after migration — f3b7d29
 
 ### Phase 4: Shared Loading/Empty/Inline-Error State Components
 
 #### Automated
 
-- [ ] 4.1 Lint passes: `npm run lint`
-- [ ] 4.2 Build passes: `npm run build`
+- [x] 4.1 Lint passes: `npm run lint`
+- [x] 4.2 Build passes: `npm run build`
 
 #### Manual
 

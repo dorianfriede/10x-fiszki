@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CircleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { LoadingState } from "@/components/ui/loading-state";
+import { EmptyState } from "@/components/ui/empty-state";
+import { InlineError } from "@/components/ui/inline-error";
 
 const PAGE_SIZE = 25;
 const MAX_FIELD_LENGTH = 2000;
@@ -188,18 +190,11 @@ export default function CardListPanel({ deckId }: Props) {
 
   return (
     <div className="space-y-6">
-      {isLoading && <p className="text-blue-100/60">Loading cards...</p>}
+      {isLoading && <LoadingState label="Loading cards..." />}
 
-      {loadError && (
-        <p className="flex items-center gap-1 text-sm text-red-300">
-          <CircleAlert className="size-4 shrink-0" />
-          {loadError}
-        </p>
-      )}
+      {loadError && <InlineError message={loadError} />}
 
-      {!isLoading && !loadError && total === 0 && (
-        <p className="text-center text-blue-100/60">This deck doesn&apos;t have any cards yet.</p>
-      )}
+      {!isLoading && !loadError && total === 0 && <EmptyState>This deck doesn&apos;t have any cards yet.</EmptyState>}
 
       {!isLoading && !loadError && total > 0 && (
         <>
@@ -236,17 +231,15 @@ export default function CardListPanel({ deckId }: Props) {
                   />
 
                   {editFieldError && (
-                    <p className="mt-1 flex items-center gap-1 text-xs text-red-300">
-                      <CircleAlert className="size-3" />
-                      {editFieldError}
-                    </p>
+                    <div className="mt-1">
+                      <InlineError message={editFieldError} size="xs" />
+                    </div>
                   )}
 
                   {editSaveError && (
-                    <p className="mt-2 flex items-center gap-1 text-sm text-red-300">
-                      <CircleAlert className="size-4 shrink-0" />
-                      {editSaveError}
-                    </p>
+                    <div className="mt-2">
+                      <InlineError message={editSaveError} />
+                    </div>
                   )}
 
                   <div className="mt-4 flex gap-2">

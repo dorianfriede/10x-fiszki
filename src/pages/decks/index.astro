@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import CreateDeckForm from "@/components/decks/CreateDeckForm";
 import { createClient } from "@/lib/supabase";
+import { CircleAlert } from "lucide-react";
 
 const error = Astro.url.searchParams.get("error");
 
@@ -24,7 +25,10 @@ const { data: decks, error: decksError } = supabase
 
       {
         decksError ? (
-          <p class="text-center text-red-300">Couldn't load your decks. Please try refreshing the page.</p>
+          <p class="flex items-center justify-center gap-1 text-sm text-red-300">
+            <CircleAlert className="size-4 shrink-0" />
+            Couldn't load your decks. Please try refreshing the page.
+          </p>
         ) : decks && decks.length > 0 ? (
           <ul class="space-y-2">
             {decks.map((deck) => (

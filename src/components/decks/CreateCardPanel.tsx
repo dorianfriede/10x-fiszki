@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CircleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { InlineError } from "@/components/ui/inline-error";
 
 const MAX_FIELD_LENGTH = 2000;
 
@@ -116,17 +116,15 @@ export default function CreateCardPanel({ deckId }: Props) {
         />
 
         {fieldError && (
-          <p className="mt-1 flex items-center gap-1 text-xs text-red-300">
-            <CircleAlert className="size-3" />
-            {fieldError}
-          </p>
+          <div className="mt-1">
+            <InlineError message={fieldError} size="xs" />
+          </div>
         )}
 
         {saveError && (
-          <p className="mt-2 flex items-center gap-1 text-sm text-red-300">
-            <CircleAlert className="size-4 shrink-0" />
-            {saveError}
-          </p>
+          <div className="mt-2">
+            <InlineError message={saveError} />
+          </div>
         )}
 
         <Button type="button" className="mt-4 w-full" disabled={isSaving} onClick={handleSubmit}>

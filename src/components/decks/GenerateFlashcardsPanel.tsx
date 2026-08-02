@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Sparkles, CircleAlert, RefreshCw, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { InlineError } from "@/components/ui/inline-error";
 import { cn } from "@/lib/utils";
 
 const MAX_TEXT_LENGTH = 10_000;
@@ -198,10 +200,9 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
           className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/40 transition-colors focus:ring-2 focus:ring-purple-400 focus:outline-none"
         />
         {lengthError && (
-          <p className="mt-1 flex items-center gap-1 text-xs text-red-300">
-            <CircleAlert className="size-3" />
-            {lengthError}
-          </p>
+          <div className="mt-1">
+            <InlineError message={lengthError} size="xs" />
+          </div>
         )}
 
         <Button type="button" className="mt-4 w-full" disabled={isGenerating} onClick={handleGenerate}>
@@ -233,9 +234,7 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
       )}
 
       {proposals?.length === 0 && (
-        <p className="text-center text-blue-100/60">
-          No flashcards could be generated from that text — try adding more detail.
-        </p>
+        <EmptyState>No flashcards could be generated from that text — try adding more detail.</EmptyState>
       )}
 
       {proposals && proposals.length > 0 && (
@@ -285,21 +284,15 @@ export default function GenerateFlashcardsPanel({ deckId }: Props) {
                 </div>
 
                 {invalidAcceptedIndices.has(index) && (
-                  <p className="mt-2 flex items-center gap-1 text-xs text-red-300">
-                    <CircleAlert className="size-3" />
-                    This card is too long to save — reject it to continue
-                  </p>
+                  <div className="mt-2">
+                    <InlineError message="This card is too long to save — reject it to continue" size="xs" />
+                  </div>
                 )}
               </li>
             ))}
           </ul>
 
-          {saveError && (
-            <p className="flex items-center gap-1 text-sm text-red-300">
-              <CircleAlert className="size-4 shrink-0" />
-              {saveError}
-            </p>
-          )}
+          {saveError && <InlineError message={saveError} />}
 
           <Button
             type="button"
