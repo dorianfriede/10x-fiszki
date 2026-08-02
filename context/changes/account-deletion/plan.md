@@ -168,6 +168,8 @@ Wire the two API routes into real screens, and make every protected route respec
 
 **Contract**: Reads `Astro.locals.pendingDeletionRequestedAt` (set by the middleware in item 1 — no re-query), computes days remaining as `Math.max(0, 30 - Math.floor((Date.now() - new Date(requestedAt).getTime()) / 86_400_000))`, renders a cancel form (`POST /api/account/cancel`) and reuses the existing sign-out form markup from `dashboard.astro`.
 
+**Addendum (post-implementation, impl-review F3)**: implemented as a `CancelDeletionDialog` confirm-modal island (mirroring `DeleteAccountDialog`'s `<dialog>` pattern) wrapping the cancel form, rather than a bare form — an intentional consistency choice with the delete-confirmation UX in this same feature.
+
 #### 5. Dashboard nav link
 
 **File**: `src/pages/dashboard.astro`

@@ -26,7 +26,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   if (context.locals.user && supabase) {
-    const { data: pendingDeletion } = await supabase
+    const { data: pendingDeletion, error: pendingDeletionError } = await supabase
       .from("account_deletion_requests")
       .select("requested_at")
       .eq("user_id", context.locals.user.id)
@@ -34,10 +34,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
     if (pendingDeletion) {
       context.locals.pendingDeletionRequestedAt = pendingDeletion.requested_at;
+    }
 
-      if (!PENDING_DELETION_EXEMPT_PATHS.includes(context.url.pathname)) {
-        return context.redirect("/account/pending-deletion");
-      }
+    if ((pendingDeletion || pendingDeletionError) && !PENDING_DELETION_EXEMPT_PATHS.includes(context.url.pathname)) {
+      return context.redirect("/account/pending-deletion");
     }
   }
 

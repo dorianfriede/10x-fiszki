@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FormField } from "@/components/auth/FormField";
 import { ServerError } from "@/components/auth/ServerError";
 
 interface Props {
@@ -51,22 +53,15 @@ export default function DeleteAccountDialog({ email, serverError }: Props) {
         </p>
 
         <form method="POST" action="/api/account/delete" className="space-y-4">
-          <div>
-            <label htmlFor="confirm-email" className="mb-1 block text-sm text-blue-100/80">
-              Email
-            </label>
-            <input
-              id="confirm-email"
-              type="text"
-              value={confirmText}
-              onChange={(e) => {
-                setConfirmText(e.target.value);
-              }}
-              placeholder={email}
-              autoComplete="off"
-              className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/40 transition-colors focus:ring-2 focus:ring-purple-400 focus:outline-none"
-            />
-          </div>
+          <FormField
+            id="confirm-email"
+            name="confirmEmail"
+            label="Email"
+            value={confirmText}
+            onChange={setConfirmText}
+            placeholder={email}
+            icon={<Mail className="size-4" />}
+          />
 
           <ServerError message={serverError} />
 
