@@ -11,13 +11,59 @@ interface Props {
   deckId: string;
 }
 
-const RATING_BUTTONS: { grade: Grade; label: string; variant: "destructive" | "secondary" | "default" | "outline" }[] =
-  [
-    { grade: Rating.Again, label: "Again", variant: "destructive" },
-    { grade: Rating.Hard, label: "Hard", variant: "secondary" },
-    { grade: Rating.Good, label: "Good", variant: "default" },
-    { grade: Rating.Easy, label: "Easy", variant: "outline" },
-  ];
+interface RatingButtonColors {
+  bg: string;
+  border: string;
+  text: string;
+  hoverBg: string;
+}
+
+const RATING_BUTTONS: { grade: Grade; label: string; key: string; colors: RatingButtonColors }[] = [
+  {
+    grade: Rating.Again,
+    label: "Again",
+    key: "1",
+    colors: {
+      bg: "rgba(232,90,96,0.12)",
+      border: "rgba(232,90,96,0.32)",
+      text: "#F08A8F",
+      hoverBg: "rgba(232,90,96,0.22)",
+    },
+  },
+  {
+    grade: Rating.Hard,
+    label: "Hard",
+    key: "2",
+    colors: {
+      bg: "rgba(224,158,62,0.12)",
+      border: "rgba(224,158,62,0.32)",
+      text: "#E3A85C",
+      hoverBg: "rgba(224,158,62,0.22)",
+    },
+  },
+  {
+    grade: Rating.Good,
+    label: "Good",
+    key: "3",
+    colors: {
+      bg: "rgba(61,183,124,0.16)",
+      border: "rgba(61,183,124,0.45)",
+      text: "#63C795",
+      hoverBg: "rgba(61,183,124,0.26)",
+    },
+  },
+  {
+    grade: Rating.Easy,
+    label: "Easy",
+    key: "4",
+    colors: {
+      bg: "rgba(86,142,214,0.12)",
+      border: "rgba(86,142,214,0.32)",
+      text: "#7FA9E8",
+      hoverBg: "rgba(86,142,214,0.22)",
+    },
+  },
+];
 
 function pluralize(count: number, unit: string): string {
   return `${count} ${unit}${count === 1 ? "" : "s"}`;
@@ -70,6 +116,23 @@ export default function ReviewSessionPanel({ deckId }: Props) {
       isMountedRef.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (!revealed) return;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (isRating) return;
+      const button = RATING_BUTTONS.find((b) => b.key === e.key);
+      if (!button) return;
+      e.preventDefault();
+      void rate(button.grade);
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [revealed, isRating]);
 
   useEffect(() => {
     let cancelled = false;
@@ -407,21 +470,32 @@ export default function ReviewSessionPanel({ deckId }: Props) {
             <p className="text-sm text-blue-100/60">Back</p>
             <p className="mb-4 whitespace-pre-wrap text-white">{currentCard.back}</p>
 
-            <div className="flex flex-wrap gap-2">
-              {RATING_BUTTONS.map(({ grade, label, variant }) => (
-                <Button
+            <div className="grid grid-cols-4 gap-3">
+              {RATING_BUTTONS.map(({ grade, label, colors }) => (
+                <button
                   key={grade}
                   type="button"
-                  variant={variant}
                   disabled={isRating}
                   onClick={() => void rate(grade)}
-                  className="flex-1 rounded-lg px-4 py-2 text-sm font-medium"
+                  className="cursor-pointer rounded-[10px] border border-[var(--btn-border)] bg-[var(--btn-bg)] px-[10px] py-3 text-[15px] font-semibold text-[var(--btn-text)] transition-colors duration-150 outline-none hover:bg-[var(--btn-hover-bg)] focus-visible:bg-[var(--btn-hover-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--btn-text)] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                  style={
+                    {
+                      "--btn-bg": colors.bg,
+                      "--btn-border": colors.border,
+                      "--btn-text": colors.text,
+                      "--btn-hover-bg": colors.hoverBg,
+                    } as React.CSSProperties
+                  }
                 >
-                  {label}
-                  {preview?.[grade] && (
-                    <span className="ml-1 text-xs opacity-70">({formatInterval(preview[grade], new Date())})</span>
-                  )}
-                </Button>
+                  <span className="flex items-baseline justify-center gap-2">
+                    {label}
+                    {preview?.[grade] && (
+                      <span className="text-[13px] font-medium opacity-70">
+                        ({formatInterval(preview[grade], new Date())})
+                      </span>
+                    )}
+                  </span>
+                </button>
               ))}
             </div>
           </>
