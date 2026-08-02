@@ -1,7 +1,7 @@
 ---
 change_id: ux-improvements
 title: Bulk candidate review actions + review session reset
-status: plan_reviewed
+status: implementing
 created: 2026-08-02
 updated: 2026-08-02
 archived_at: null

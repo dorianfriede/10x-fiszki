@@ -165,17 +165,17 @@ No schema changes — both phases work entirely within the existing `cards` tabl
 
 #### Automated
 
-- [ ] 1.1 Type checking passes
-- [ ] 1.2 Linting passes
-- [ ] 1.3 Build succeeds
+- [x] 1.1 Type checking passes
+- [x] 1.2 Linting passes
+- [x] 1.3 Build succeeds
 
 #### Manual
 
-- [ ] 1.4 "Accept all" marks every proposal accepted
-- [ ] 1.5 "Reject all" marks every proposal rejected, including previously accepted ones
-- [ ] 1.6 Individual toggle after a bulk action still works on a single item
-- [ ] 1.7 Oversized/empty accepted proposal shows inline warning and blocks save
-- [ ] 1.8 Normal save (no invalid proposals) still works unchanged
+- [x] 1.4 "Accept all" marks every proposal accepted
+- [x] 1.5 "Reject all" marks every proposal rejected, including previously accepted ones
+- [x] 1.6 Individual toggle after a bulk action still works on a single item
+- [x] 1.7 Oversized/empty accepted proposal shows inline warning and blocks save
+- [x] 1.8 Normal save (no invalid proposals) still works unchanged
 
 ### Phase 2: Reset an in-progress review session
 

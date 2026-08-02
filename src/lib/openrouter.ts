@@ -2,6 +2,9 @@ import { OPENROUTER_API_KEY } from "astro:env/server";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const MODEL = "openai/gpt-oss-20b:free";
+// The free-tier model emits a lengthy internal reasoning chain before its answer, which can push
+// total response time (including body streaming) well past a header-only timeout.
+const REQUEST_TIMEOUT_MS = 45_000;
 
 const SYSTEM_PROMPT = `You turn study text into flashcards for spaced repetition.
 
@@ -51,9 +54,12 @@ export async function generateFlashcards(sourceText: string): Promise<{ proposal
     throw new GenerationError("OpenRouter is not configured");
   }
 
-  let response: Response;
+  // The timeout signal must span both the fetch and the body read below — the free-tier model's
+  // reasoning chain can arrive well after headers do, so an abort during response.json() is just
+  // as real a timeout as one during fetch() itself.
+  let payload: unknown;
   try {
-    response = await fetch(OPENROUTER_URL, {
+    const response = await fetch(OPENROUTER_URL, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${OPENROUTER_API_KEY}`,
@@ -67,9 +73,17 @@ export async function generateFlashcards(sourceText: string): Promise<{ proposal
           { role: "user", content: sourceText },
         ],
       }),
-      signal: AbortSignal.timeout(15_000),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
+
+    if (!response.ok) {
+      console.error("openrouter call failed", { status: response.status });
+      throw new GenerationError("The AI service returned an error");
+    }
+
+    payload = await response.json();
   } catch (err) {
+    if (err instanceof GenerationError) throw err;
     if (err instanceof Error && err.name === "TimeoutError") {
       console.error("openrouter call failed", { reason: "timeout" });
       throw new GenerationError("The AI service took too long to respond");
@@ -78,12 +92,6 @@ export async function generateFlashcards(sourceText: string): Promise<{ proposal
     throw new GenerationError("Could not reach the AI service");
   }
 
-  if (!response.ok) {
-    console.error("openrouter call failed", { status: response.status });
-    throw new GenerationError("The AI service returned an error");
-  }
-
-  const payload: unknown = await response.json().catch(() => null);
   const content = extractContent(payload);
 
   if (content === null) {
