@@ -33,6 +33,9 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | in-progress |
 | S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | in-progress |
 | S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | ready |
+| S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | planned |
+| S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | planned |
+| S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | planned |
 
 ## Streams
 
@@ -43,6 +46,8 @@ Navigation aid — groups items that share a prerequisites chain. Canonical orde
 | A      | Data foundation & generation loop | `F-01` → `S-01` → `S-02`     | Carries the north star; sequenced first under the speed priority.     |
 | B      | Manual entry & card curation  | `S-03` / `S-04`                | Both join Stream A at `S-01`; independent of AI generation, so they can run in parallel with S-02. |
 | C      | Review & scheduling            | `S-05`                          | Joins Stream A at `S-01`; SRS library choice resolved (`ts-fsrs`, self-hosted) — no longer blocked. |
+| D      | UX & account lifecycle        | `S-06` / `S-08`                | Both join Stream A at `F-01` only; independent of AI generation and deck management, so they can run in parallel with S-02/S-03/S-04/S-05. |
+| E      | Cross-cutting polish           | `S-07`                          | Joins after S-01–S-05 all exist — polish needs every existing screen built first, so it's sequenced last among current slices by design, not by priority. |
 
 ## Baseline
 
@@ -135,6 +140,43 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Was genuinely blocked on an external decision; resolved by choosing a self-hosted library instead of a hosted vendor, which also sidesteps the early-access/pricing risk of the one hosted option found (SuperMemo API).
 - **Status:** ready
 
+### S-06: User has bulk actions during candidate review and can reset a review session
+
+- **Outcome:** user can select multiple AI-generated candidate cards during the S-02 review step and accept/reject them as a batch, and can reset an in-progress spaced-repetition review session (S-05) back to its starting state instead of abandoning it.
+- **Change ID:** `ux-improvements`
+- **PRD refs:** — not in PRD v1; gap identified by the user during S-01–S-05 implementation, not a documented FR.
+- **Prerequisites:** F-01
+- **Parallel with:** S-05
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Extends UI already built by S-02 (candidate review) and S-05 (review session) — building it before those land risks rework against a moving target.
+- **Status:** planned
+
+### S-07: User experiences a visually polished UI
+
+- **Outcome:** (cross-cutting) user experiences a visually refined, consistent UI across every existing screen (decks, generation/review, manual creation, card browsing, review session) — no new functional capability, purely presentation.
+- **Change ID:** `ui-polish`
+- **PRD refs:** — not in PRD v1; not tied to any FR/NFR, a quality/perception improvement requested outside the original scope.
+- **Prerequisites:** F-01, S-01, S-02, S-03, S-04, S-05
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Depends on every other slice's UI existing first, since there's nothing to polish otherwise — sequenced last among current slices by design.
+- **Status:** planned
+
+### S-08: User can delete their account with a 30-day retention window
+
+- **Outcome:** user can request account deletion; the account and its data (decks, cards, review history) are retained for 30 days before permanent purge, giving the user a window to reverse the request.
+- **Change ID:** `account-deletion`
+- **PRD refs:** — not in PRD v1; relates to Access Control / Auth (FR-001–FR-003) but no FR covers deletion or retention specifically.
+- **Prerequisites:** F-01
+- **Parallel with:** S-02, S-03, S-04, S-05, S-06, S-07
+- **Blockers:** —
+- **Unknowns:**
+  - Where the 30-day countdown/purge job runs (cron, Cloudflare scheduled worker, manual admin trigger) is undecided. Owner: user. Block: no (schema/UI can be built against a `deleted_at` timestamp regardless of purge mechanism).
+- **Risk:** Introduces a scheduled/background deletion mechanism not present anywhere else in the codebase — the purge job is new infrastructure, not just a new screen.
+- **Status:** planned
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                          | Suggested issue title                                          | Ready for `/10x-plan` | Notes |
@@ -145,6 +187,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-03       | `manual-flashcard-creation`          | Manual flashcard creation                                            | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-04       | `card-browsing-and-editing`          | Card browse/edit/delete                                              | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-05       | `spaced-repetition-review-session`   | Spaced-repetition review session                                     | yes                     | SRS library decision resolved (`ts-fsrs`, self-hosted) — ready for `/10x-plan` |
+| S-06       | `ux-improvements`                    | Bulk accept/reject in candidate review + reset review session       | no                      | Newly added; not in PRD v1 |
+| S-07       | `ui-polish`                          | Cross-cutting UI polish pass                                         | no                      | Blocked until S-01–S-05 are all implemented; not in PRD v1 |
+| S-08       | `account-deletion`                   | Account deletion with 30-day retention                               | no                      | Purge mechanism (cron/scheduled worker) undecided; not in PRD v1 |
 
 ## Open Roadmap Questions
 
@@ -153,6 +198,7 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 1. ~~Deck deletion behavior (cascade vs. archive)~~ → resolved during roadmap generation (2026-07-28): cascade delete. Was embedded in **F-01**'s Unknowns; F-01 is now unblocked (`Status: ready`).
 2. AI generation prompt design → embedded in **S-02**'s Unknowns. Owner: user. Block: no.
 3. ~~Which third-party SRS service~~ → resolved 2026-08-01: self-hosted `ts-fsrs` library, not a hosted third-party API. Was embedded in **S-05**'s Unknowns; S-05 is now unblocked (`Status: ready`). Details: `context/changes/spaced-repetition-review-session/srs-library-research.md`.
+4. **Account-deletion purge mechanism.** Where the 30-day countdown/purge job runs (cron, Cloudflare scheduled worker, manual admin trigger). Embedded in **S-08**'s Unknowns. Owner: user. Block: no.
 
 ## Parked
 
