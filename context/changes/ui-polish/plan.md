@@ -363,26 +363,26 @@ No data migration. `Welcome.astro` is deleted in Phase 5; confirm no page other 
 
 #### Automated
 
-- [x] 1.1 Lint passes: `npm run lint`
-- [x] 1.2 Build passes: `npm run build`
+- [x] 1.1 Lint passes: `npm run lint` — 179683b
+- [x] 1.2 Build passes: `npm run build` — 179683b
 
 #### Manual
 
-- [x] 1.3 ReviewSessionPanel's 4 rating buttons render with the intended purple/red/glass/outline look
-- [x] 1.4 No visual change on any screen that doesn't yet consume the new variants
+- [x] 1.3 ReviewSessionPanel's 4 rating buttons render with the intended purple/red/glass/outline look — 179683b
+- [x] 1.4 No visual change on any screen that doesn't yet consume the new variants — 179683b
 
 ### Phase 2: Topbar Navigation Redesign
 
 #### Automated
 
-- [ ] 2.1 Lint passes: `npm run lint`
-- [ ] 2.2 Build passes: `npm run build`
+- [x] 2.1 Lint passes: `npm run lint`
+- [x] 2.2 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.3 Icons render correctly for Dashboard/Decks/Sign out (and Sign in/Sign up when signed out)
-- [ ] 2.4 The current page is visually distinguishable from the other nav links on at least 3 different pages
-- [ ] 2.5 Nav reads clearly at a glance — the original "hard to see the options" complaint is resolved
+- [x] 2.3 Icons render correctly for Dashboard/Decks/Sign out (and Sign in/Sign up when signed out)
+- [x] 2.4 The current page is visually distinguishable from the other nav links on at least 3 different pages
+- [x] 2.5 Nav reads clearly at a glance — the original "hard to see the options" complaint is resolved
 
 ### Phase 3: Shared ConfirmDialog Primitive + Button Call-Site Migration
 

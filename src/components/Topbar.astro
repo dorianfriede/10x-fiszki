@@ -1,5 +1,16 @@
 ---
+import { LayoutDashboard, Layers, LogOut, LogIn, UserPlus } from "lucide-react";
+
 const { user } = Astro.locals;
+const pathname = Astro.url.pathname;
+
+function isActive(path: string) {
+  return pathname === path || pathname.startsWith(`${path}/`);
+}
+
+const navLinkBase = "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors";
+const navLinkInactive = "text-purple-300 hover:bg-white/10 hover:text-purple-100";
+const navLinkActive = "bg-white/10 text-white";
 ---
 
 <div
@@ -9,15 +20,21 @@ const { user } = Astro.locals;
     user ? (
       <>
         <span class="text-blue-100/70">{user.email}</span>
-        <div class="flex items-center gap-3">
-          <a href="/dashboard" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
+        <div class="flex items-center gap-1">
+          <a href="/dashboard" class:list={[navLinkBase, isActive("/dashboard") ? navLinkActive : navLinkInactive]}>
+            <LayoutDashboard className="size-4" />
             Dashboard
           </a>
-          <a href="/decks" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
+          <a href="/decks" class:list={[navLinkBase, isActive("/decks") ? navLinkActive : navLinkInactive]}>
+            <Layers className="size-4" />
             Decks
           </a>
-          <form method="POST" action="/api/auth/signout">
-            <button type="submit" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
+          <form method="POST" action="/api/auth/signout" class="ml-1 border-l border-white/10 pl-2">
+            <button
+              type="submit"
+              class="inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-purple-300 transition-colors hover:bg-white/10 hover:text-purple-100"
+            >
+              <LogOut className="size-4" />
               Sign out
             </button>
           </form>
@@ -26,11 +43,13 @@ const { user } = Astro.locals;
     ) : (
       <>
         <span class="text-blue-100/70">Not signed in</span>
-        <div class="flex gap-3">
-          <a href="/auth/signin" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
+        <div class="flex items-center gap-1">
+          <a href="/auth/signin" class:list={[navLinkBase, isActive("/auth/signin") ? navLinkActive : navLinkInactive]}>
+            <LogIn className="size-4" />
             Sign in
           </a>
-          <a href="/auth/signup" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
+          <a href="/auth/signup" class:list={[navLinkBase, isActive("/auth/signup") ? navLinkActive : navLinkInactive]}>
+            <UserPlus className="size-4" />
             Sign up
           </a>
         </div>
