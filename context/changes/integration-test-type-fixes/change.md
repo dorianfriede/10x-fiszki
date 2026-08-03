@@ -1,7 +1,7 @@
 ---
 change_id: integration-test-type-fixes
 title: Integration test type fixes (tsc --noEmit gate)
-status: implementing
+status: implemented
 created: 2026-08-03
 updated: 2026-08-03
 archived_at: null

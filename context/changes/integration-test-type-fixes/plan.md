@@ -130,12 +130,12 @@ Not applicable — no data or schema changes.
 
 #### Automated
 
-- [x] 1.1 `npx tsc --noEmit` exits 0 with no errors
-- [x] 1.2 `npx astro check` exits 0 with no errors
-- [x] 1.3 `npm run lint` passes
-- [x] 1.4 No changes outside the 4 listed test files
+- [x] 1.1 `npx tsc --noEmit` exits 0 with no errors — 8a44337
+- [x] 1.2 `npx astro check` exits 0 with no errors — 8a44337
+- [x] 1.3 `npm run lint` passes — 8a44337
+- [x] 1.4 No changes outside the 4 listed test files — 8a44337
 
 #### Manual
 
-- [x] 1.5 `npm test` passes locally with Supabase running
-- [x] 1.6 Spot-check diffs show only import/cast lines changed
+- [x] 1.5 `npm test` passes locally with Supabase running — 8a44337
+- [x] 1.6 Spot-check diffs show only import/cast lines changed — 8a44337
