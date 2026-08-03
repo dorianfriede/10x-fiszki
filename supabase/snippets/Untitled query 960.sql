@@ -1,0 +1,1 @@
+select * from auth.users where email like 'test-user-%@example.test';

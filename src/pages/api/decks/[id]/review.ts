@@ -132,6 +132,7 @@ export const POST: APIRoute = async (context) => {
     .from("cards")
     .update(fromFsrsCard(nextCard))
     .eq("id", body.cardId)
+    .eq("deck_id", id)
     .select("due")
     .single();
 

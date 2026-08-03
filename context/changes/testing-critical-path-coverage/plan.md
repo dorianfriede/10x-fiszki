@@ -630,10 +630,10 @@ no existing data is affected.
 
 #### Automated
 
-- [x] 1.1 `npm test` runs and exits 0 with zero test files collected
-- [x] 1.2 `supabase start` succeeds locally
-- [x] 1.3 `npm run lint` passes on all new files
-- [x] 1.4 CI pipeline runs `supabase start` + `npm test` successfully
+- [x] 1.1 `npm test` runs and exits 0 with zero test files collected — bc532b3
+- [x] 1.2 `supabase start` succeeds locally — bc532b3
+- [x] 1.3 `npm run lint` passes on all new files — bc532b3
+- [x] 1.4 CI pipeline runs `supabase start` + `npm test` successfully — bc532b3
 
 #### Manual
 
@@ -643,32 +643,32 @@ no existing data is affected.
 
 #### Automated
 
-- [x] 2.1 `npm test -- fsrs` passes
-- [x] 2.2 `npm run lint` passes
+- [x] 2.1 `npm test -- fsrs` passes — bc532b3
+- [x] 2.2 `npm run lint` passes — bc532b3
 
 ### Phase 3: FSRS Integration Test (Risk #1)
 
 #### Automated
 
-- [x] 3.1 `npm test -- review` passes
-- [x] 3.2 `npm run lint` passes
+- [x] 3.1 `npm test -- review` passes — bc532b3
+- [x] 3.2 `npm run lint` passes — bc532b3
 
 #### Manual
 
-- [x] 3.3 Confirm no leaked fixture rows in local Supabase Studio after test run
+- [x] 3.3 Confirm no leaked fixture rows in local Supabase Studio after test run — bc532b3
 
 ### Phase 4: CRUD Edge-Case Tests + Fixes (Risk #2, Server)
 
 #### Automated
 
-- [ ] 4.1 `npm test -- deck-delete` passes (red before fix, green after)
-- [ ] 4.2 `npm test -- cards-crud` passes
-- [ ] 4.3 `npm run lint` passes
-- [ ] 4.4 `npm run build` passes
+- [x] 4.1 `npm test -- deck-delete` passes (red before fix, green after)
+- [x] 4.2 `npm test -- cards-crud` passes
+- [x] 4.3 `npm run lint` passes
+- [x] 4.4 `npm run build` passes
 
 #### Manual
 
-- [ ] 4.5 Manual deck delete via UI matches new not-found contract
+- [x] 4.5 Manual deck delete via UI matches new not-found contract
 
 ### Phase 5: Client-Side Race Tests + Fix (Risk #2, CardListPanel)
 
