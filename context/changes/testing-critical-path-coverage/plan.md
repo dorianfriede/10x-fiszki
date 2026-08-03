@@ -637,7 +637,7 @@ no existing data is affected.
 
 #### Manual
 
-- [x] 1.5 Auth-contract throwaway test confirms RLS is actually scoped by the replayed cookie
+- [x] 1.5 Auth-contract throwaway test confirms RLS is actually scoped by the replayed cookie — c44fbcc
 
 ### Phase 2: FSRS Unit Tests (Risk #1)
 
@@ -693,8 +693,8 @@ no existing data is affected.
 
 #### Automated
 
-- [x] 7.1 `npm run lint` / `npm run format` pass on edited markdown
+- [x] 7.1 `npm run lint` / `npm run format` pass on edited markdown — c44fbcc
 
 #### Manual
 
-- [x] 7.2 Cookbook read-through confirms it's sufficient for Phase 2 without re-reading this plan
+- [x] 7.2 Cookbook read-through confirms it's sufficient for Phase 2 without re-reading this plan — c44fbcc
