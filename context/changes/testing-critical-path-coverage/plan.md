@@ -661,25 +661,25 @@ no existing data is affected.
 
 #### Automated
 
-- [x] 4.1 `npm test -- deck-delete` passes (red before fix, green after)
-- [x] 4.2 `npm test -- cards-crud` passes
-- [x] 4.3 `npm run lint` passes
-- [x] 4.4 `npm run build` passes
+- [x] 4.1 `npm test -- deck-delete` passes (red before fix, green after) — 08e1471
+- [x] 4.2 `npm test -- cards-crud` passes — 08e1471
+- [x] 4.3 `npm run lint` passes — 08e1471
+- [x] 4.4 `npm run build` passes — 08e1471
 
 #### Manual
 
-- [x] 4.5 Manual deck delete via UI matches new not-found contract
+- [x] 4.5 Manual deck delete via UI matches new not-found contract — 08e1471
 
 ### Phase 5: Client-Side Race Tests + Fix (Risk #2, CardListPanel)
 
 #### Automated
 
-- [ ] 5.1 `npm test -- card-list-panel` passes (pagination-race assertion red before fix, green after)
-- [ ] 5.2 `npm run lint` passes
+- [x] 5.1 `npm test -- card-list-panel` passes (pagination-race assertion red before fix, green after)
+- [x] 5.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 5.3 Manual quick-succession edit test in running app confirms no clobbering
+- [x] 5.3 Manual quick-succession edit test in running app confirms no clobbering
 
 ### Phase 6: Save-Loss Tests (Risk #3)
 

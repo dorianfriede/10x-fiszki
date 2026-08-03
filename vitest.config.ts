@@ -6,5 +6,6 @@ export default getViteConfig({
     environment: "node",
     globals: true,
     setupFiles: ["./tests/setup.ts"],
+    pool: "vmThreads",
   },
 });

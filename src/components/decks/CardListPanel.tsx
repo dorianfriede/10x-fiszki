@@ -80,6 +80,20 @@ export default function CardListPanel({ deckId }: Props) {
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
+  // Pages back once the *current render's* card list for this page is
+  // genuinely empty - adjusting state during render (React's documented
+  // alternative to a "sync on change" Effect) means this reads `cards`,
+  // `total`, and `page` as they exist in this commit, never a snapshot
+  // closed over before an in-flight delete's fetch resolves, so navigating
+  // away from the page mid-delete can't make it fire on stale data.
+  const [cardsLengthAtLastCheck, setCardsLengthAtLastCheck] = useState(cards.length);
+  if (cards.length !== cardsLengthAtLastCheck) {
+    setCardsLengthAtLastCheck(cards.length);
+    if (cards.length === 0 && total > 0 && page > 1) {
+      setPage((current) => current - 1);
+    }
+  }
+
   function startEdit(card: Card) {
     setEditingCardId(card.id);
     setEditFront(card.front);
@@ -172,14 +186,9 @@ export default function CardListPanel({ deckId }: Props) {
         return;
       }
 
-      const remainingOnPage = cards.filter((card) => card.id !== cardId).length;
-
       setPendingDelete(null);
       setCards((current) => current.filter((card) => card.id !== cardId));
       setTotal((current) => current - 1);
-      if (remainingOnPage === 0 && page > 1) {
-        setPage((current) => current - 1);
-      }
     } catch {
       if (!isMountedRef.current) return;
       setDeleteError("Could not reach the server");
