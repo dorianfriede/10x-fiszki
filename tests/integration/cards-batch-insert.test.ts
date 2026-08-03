@@ -2,7 +2,7 @@ import { experimental_AstroContainer } from "astro/container";
 import type { AstroCookies } from "astro";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import * as CardsRoute from "@/pages/api/decks/[id]/cards";
+import * as CardsRouteImport from "@/pages/api/decks/[id]/cards";
 import { createClient } from "@/lib/supabase";
 import type { Database, Tables } from "@/db/database.types";
 import { createTestUser, deleteTestUser, getAuthenticatedRequestInit, type TestUser } from "../helpers/test-auth";
@@ -41,6 +41,9 @@ async function insertCard(
 // No-op cookie jar, matching tests/integration/auth-contract.test.ts: this
 // client only ever reads the session from the replayed `Cookie` header.
 const noopCookies = { set: () => undefined } as unknown as AstroCookies;
+
+type ContainerComponent = Parameters<experimental_AstroContainer["renderToResponse"]>[0];
+const CardsRoute = CardsRouteImport as unknown as ContainerComponent;
 
 describe("cards.ts POST batch insert atomicity", () => {
   let user: TestUser;
@@ -96,7 +99,7 @@ describe("cards.ts POST batch insert atomicity", () => {
         }),
       }),
       params: { id: deck.id },
-      locals: { user, pendingDeletionRequestedAt: null },
+      locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
     });
 
     expect(response.status).toBe(400);

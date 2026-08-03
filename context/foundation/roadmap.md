@@ -36,6 +36,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | in-progress |
 | S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | planned |
 | S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | in-progress |
+| S-09 | `integration-test-type-fixes`        | (cross-cutting, tech debt) `tsc --noEmit` passes cleanly so a typecheck quality gate (local hook or CI) can be trusted | —               | — (not in PRD v1)       | planned |
 
 ## Streams
 
@@ -48,6 +49,7 @@ Navigation aid — groups items that share a prerequisites chain. Canonical orde
 | C      | Review & scheduling            | `S-05`                          | Joins Stream A at `S-01`; SRS library choice resolved (`ts-fsrs`, self-hosted) — no longer blocked. |
 | D      | UX & account lifecycle        | `S-06` / `S-08`                | Both join Stream A at `F-01` only; independent of AI generation and deck management, so they can run in parallel with S-02/S-03/S-04/S-05. |
 | E      | Cross-cutting polish           | `S-07`                          | Joins after S-01–S-05 all exist — polish needs every existing screen built first, so it's sequenced last among current slices by design, not by priority. |
+| F      | Tech debt & quality gates      | `S-09`                          | No prerequisites — isolated to existing integration test files, independent of every other stream; can run any time. |
 
 ## Baseline
 
@@ -177,6 +179,18 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Introduces a scheduled/background deletion mechanism not present anywhere else in the codebase — the purge job is new infrastructure, not just a new screen.
 - **Status:** in-progress (change `impl_reviewed`, not yet archived)
 
+### S-09: `tsc --noEmit` passes cleanly (integration test type fixes)
+
+- **Outcome:** (cross-cutting, tech debt) The 12 pre-existing `tsc --noEmit` errors in `tests/integration/*.test.ts` are fixed, so a typecheck quality gate (per-edit hook, pre-commit, pre-push, or CI) reports real regressions instead of always failing on unrelated pre-existing errors.
+- **Change ID:** `integration-test-type-fixes`
+- **PRD refs:** — not in PRD v1; discovered while wiring the Module 3 Lesson 3 per-edit hook (`context/foundation/test-plan.md` §5 "post-edit hook" gate).
+- **Prerequisites:** —
+- **Parallel with:** S-02, S-03, S-04, S-05, S-06, S-07, S-08 — isolated to existing integration test files, no product-code coupling.
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** All 12 errors share one root cause — `container.renderToResponse(RouteModule, {...})` doesn't type-check because Astro's Container API types don't recognize endpoint route modules as `AstroComponentFactory`, even though `routeType: "endpoint"` handles them correctly at runtime. The fix is the same `as unknown as AstroComponentFactory`-style cast already used for `noopCookies` in these same files (`review.test.ts`, `deck-delete.test.ts`, `cards-crud.test.ts`, `cards-batch-insert.test.ts`) — low risk, no logic changes.
+- **Status:** planned
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                          | Suggested issue title                                          | Ready for `/10x-plan` | Notes |
@@ -190,6 +204,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-06       | `ux-improvements`                    | Bulk accept/reject in candidate review + reset review session       | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
 | S-07       | `ui-polish`                          | Cross-cutting UI polish pass                                         | no                      | Blocked until S-01–S-05 are all implemented; not in PRD v1 |
 | S-08       | `account-deletion`                   | Account deletion with 30-day retention                               | n/a (already planned)  | Implemented + impl-reviewed; not yet archived |
+| S-09       | `integration-test-type-fixes`        | Fix `tsc --noEmit` errors in integration tests (Container API typing) | yes                     | Mechanical fix — same cast pattern already used for `noopCookies` in the affected files |
 
 ## Open Roadmap Questions
 

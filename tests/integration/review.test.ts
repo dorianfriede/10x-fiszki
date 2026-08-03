@@ -2,7 +2,7 @@ import { experimental_AstroContainer } from "astro/container";
 import type { AstroCookies } from "astro";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import * as ReviewRoute from "@/pages/api/decks/[id]/review";
+import * as ReviewRouteImport from "@/pages/api/decks/[id]/review";
 import { scheduler, toFsrsCard, fromFsrsCard, type FsrsFields } from "@/lib/fsrs";
 import { createClient } from "@/lib/supabase";
 import type { Database, Tables, TablesInsert } from "@/db/database.types";
@@ -90,6 +90,9 @@ const FSRS_SELECT =
 // client only ever reads the session from the replayed `Cookie` header.
 const noopCookies = { set: () => undefined } as unknown as AstroCookies;
 
+type ContainerComponent = Parameters<experimental_AstroContainer["renderToResponse"]>[0];
+const ReviewRoute = ReviewRouteImport as unknown as ContainerComponent;
+
 describe("review.ts GET/POST integration", () => {
   let user: TestUser;
   let cookieHeader: string;
@@ -145,7 +148,7 @@ describe("review.ts GET/POST integration", () => {
           headers: { Cookie: cookieHeader },
         }),
         params: { id: deckId },
-        locals: { user, pendingDeletionRequestedAt: null },
+        locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
       });
 
       expect(response.status).toBe(200);
@@ -188,7 +191,7 @@ describe("review.ts GET/POST integration", () => {
           body: JSON.stringify({ cardId: card.id, grade }),
         }),
         params: { id: deckId },
-        locals: { user, pendingDeletionRequestedAt: null },
+        locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
       });
 
       expect(response.status).toBe(200);
@@ -218,7 +221,7 @@ describe("review.ts GET/POST integration", () => {
           body: JSON.stringify({ cardId: foreignCard.id, grade: 2 }),
         }),
         params: { id: deckId },
-        locals: { user, pendingDeletionRequestedAt: null },
+        locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
       });
 
       expect(response.status).toBe(404);
@@ -233,7 +236,7 @@ describe("review.ts GET/POST integration", () => {
           body: JSON.stringify({ cardId: "00000000-0000-0000-0000-000000000000", grade: 5 }),
         }),
         params: { id: deckId },
-        locals: { user, pendingDeletionRequestedAt: null },
+        locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
       });
 
       expect(response.status).toBe(400);

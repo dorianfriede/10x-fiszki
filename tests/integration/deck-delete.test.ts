@@ -2,7 +2,7 @@ import { experimental_AstroContainer } from "astro/container";
 import type { AstroCookies } from "astro";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import * as DeleteRoute from "@/pages/api/decks/[id]/delete";
+import * as DeleteRouteImport from "@/pages/api/decks/[id]/delete";
 import { createClient } from "@/lib/supabase";
 import type { Database, Tables } from "@/db/database.types";
 import { createTestUser, deleteTestUser, getAuthenticatedRequestInit, type TestUser } from "../helpers/test-auth";
@@ -30,6 +30,9 @@ function decodeLocationError(location: string | null): string | null {
 // No-op cookie jar, matching tests/integration/auth-contract.test.ts: this
 // client only ever reads the session from the replayed `Cookie` header.
 const noopCookies = { set: () => undefined } as unknown as AstroCookies;
+
+type ContainerComponent = Parameters<experimental_AstroContainer["renderToResponse"]>[0];
+const DeleteRoute = DeleteRouteImport as unknown as ContainerComponent;
 
 describe("delete.ts POST integration", () => {
   let userA: TestUser;
@@ -74,7 +77,7 @@ describe("delete.ts POST integration", () => {
         headers: { Cookie: cookieHeaderA },
       }),
       params: { id: deck.id },
-      locals: { user: userA, pendingDeletionRequestedAt: null },
+      locals: { user: userA, pendingDeletionRequestedAt: null } as unknown as App.Locals,
     });
 
     expect(response.status).toBe(302);
@@ -93,7 +96,7 @@ describe("delete.ts POST integration", () => {
         headers: { Cookie: cookieHeaderA },
       }),
       params: { id: "00000000-0000-0000-0000-000000000000" },
-      locals: { user: userA, pendingDeletionRequestedAt: null },
+      locals: { user: userA, pendingDeletionRequestedAt: null } as unknown as App.Locals,
     });
 
     expect(response.status).toBe(302);
@@ -112,7 +115,7 @@ describe("delete.ts POST integration", () => {
         headers: { Cookie: authB.cookieHeader },
       }),
       params: { id: foreignDeck.id },
-      locals: { user: userB, pendingDeletionRequestedAt: null },
+      locals: { user: userB, pendingDeletionRequestedAt: null } as unknown as App.Locals,
     });
 
     expect(response.status).toBe(302);
@@ -131,7 +134,7 @@ describe("delete.ts POST integration", () => {
         method: "POST",
       }),
       params: { id: deck.id },
-      locals: { user: null, pendingDeletionRequestedAt: null },
+      locals: { user: null, pendingDeletionRequestedAt: null } as unknown as App.Locals,
     });
 
     expect(response.status).toBe(302);

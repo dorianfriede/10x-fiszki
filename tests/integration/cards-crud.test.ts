@@ -2,9 +2,9 @@ import { experimental_AstroContainer } from "astro/container";
 import type { AstroCookies } from "astro";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import * as CardRoute from "@/pages/api/decks/[id]/cards/[cardId]";
-import * as CardsRoute from "@/pages/api/decks/[id]/cards";
-import * as ReviewRoute from "@/pages/api/decks/[id]/review";
+import * as CardRouteImport from "@/pages/api/decks/[id]/cards/[cardId]";
+import * as CardsRouteImport from "@/pages/api/decks/[id]/cards";
+import * as ReviewRouteImport from "@/pages/api/decks/[id]/review";
 import { createClient } from "@/lib/supabase";
 import type { Database, Tables } from "@/db/database.types";
 import { createTestUser, deleteTestUser, getAuthenticatedRequestInit, type TestUser } from "../helpers/test-auth";
@@ -50,6 +50,11 @@ async function insertCard(
 // client only ever reads the session from the replayed `Cookie` header.
 const noopCookies = { set: () => undefined } as unknown as AstroCookies;
 
+type ContainerComponent = Parameters<experimental_AstroContainer["renderToResponse"]>[0];
+const CardRoute = CardRouteImport as unknown as ContainerComponent;
+const CardsRoute = CardsRouteImport as unknown as ContainerComponent;
+const ReviewRoute = ReviewRouteImport as unknown as ContainerComponent;
+
 describe("cards CRUD edge cases", () => {
   let user: TestUser;
   let cookieHeader: string;
@@ -90,7 +95,7 @@ describe("cards CRUD edge cases", () => {
           body: JSON.stringify({ front: "irrelevant", back: "irrelevant" }),
         }),
         params: { id: deckA.id, cardId: cardInB.id },
-        locals: { user, pendingDeletionRequestedAt: null },
+        locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
       });
 
       expect(response.status).toBe(404);
@@ -108,7 +113,7 @@ describe("cards CRUD edge cases", () => {
           headers: { Cookie: cookieHeader },
         }),
         params: { id: deckA.id, cardId: cardInB.id },
-        locals: { user, pendingDeletionRequestedAt: null },
+        locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
       });
 
       expect(response.status).toBe(404);
@@ -131,7 +136,7 @@ describe("cards CRUD edge cases", () => {
         body: JSON.stringify({ front: existing.front, back: existing.back }),
       }),
       params: { id: deck.id, cardId: toEdit.id },
-      locals: { user, pendingDeletionRequestedAt: null },
+      locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
     });
 
     expect(response.status).toBe(409);
@@ -159,7 +164,7 @@ describe("cards CRUD edge cases", () => {
         }),
       }),
       params: { id: deck.id },
-      locals: { user, pendingDeletionRequestedAt: null },
+      locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
     });
 
     expect(response.status).toBe(400);
@@ -185,7 +190,7 @@ describe("cards CRUD edge cases", () => {
         body: JSON.stringify({ cardId: cardInB.id, grade: 2 }),
       }),
       params: { id: deckA.id },
-      locals: { user, pendingDeletionRequestedAt: null },
+      locals: { user, pendingDeletionRequestedAt: null } as unknown as App.Locals,
     });
 
     expect(response.status).toBe(404);
