@@ -68,6 +68,15 @@ const astroConfig = tseslint.config({
   },
 });
 
+const nodeConfigFilesConfig = tseslint.config({
+  // Root-level config files execute under Node directly (not bundled), so they
+  // reference Node globals like `process` that aren't otherwise in scope.
+  files: ["*.config.{js,mjs,cjs,ts}"],
+  languageOptions: {
+    globals: { process: "readonly" },
+  },
+});
+
 const astroReturnWorkaroundConfig = tseslint.config({
   // astro-eslint-parser doesn't attach a parent to top-level `return` in frontmatter,
   // which crashes this rule's ReturnStatement handler (nullThrows on node.parent).
@@ -91,5 +100,6 @@ export default tseslint.config(
   ...eslintPluginAstro.configs["flat/jsx-a11y-recommended"],
   astroConfig,
   astroReturnWorkaroundConfig,
+  nodeConfigFilesConfig,
   eslintPluginPrettier,
 );

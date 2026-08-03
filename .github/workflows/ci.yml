@@ -18,6 +18,20 @@ jobs:
       - run: npm ci
       - run: npx astro sync
       - run: npm run lint
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase start
+      - name: Export local Supabase env vars
+        run: |
+          supabase status -o env | grep -E '^(API_URL|ANON_KEY|SERVICE_ROLE_KEY)=' | while IFS='=' read -r key value; do
+            case "$key" in
+              API_URL) echo "SUPABASE_URL=${value//\"/}" >> "$GITHUB_ENV" ;;
+              ANON_KEY) echo "SUPABASE_KEY=${value//\"/}" >> "$GITHUB_ENV" ;;
+              SERVICE_ROLE_KEY) echo "SUPABASE_SERVICE_ROLE_KEY=${value//\"/}" >> "$GITHUB_ENV" ;;
+            esac
+          done
+      - run: npm test
       - run: npm run build
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
