@@ -59,7 +59,13 @@ describe("cards.ts POST batch insert atomicity", () => {
   });
 
   afterAll(async () => {
-    await deleteTestUser(user.id);
+    // If beforeAll threw before assigning `user`, don't let a TypeError on
+    // `user.id` mask the original failure.
+    try {
+      await deleteTestUser(user.id);
+    } catch {
+      /* user was never created */
+    }
   });
 
   it("rejects the whole batch (400) and persists none of it when one row duplicates an existing card's front+back", async () => {

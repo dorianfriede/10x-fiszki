@@ -50,8 +50,18 @@ describe("delete.ts POST integration", () => {
   });
 
   afterAll(async () => {
-    await deleteTestUser(userA.id);
-    await deleteTestUser(userB.id);
+    // Each cleanup is isolated: if beforeAll threw before assigning one of
+    // these, deleting the other must not be skipped.
+    try {
+      await deleteTestUser(userA.id);
+    } catch {
+      /* userA was never created */
+    }
+    try {
+      await deleteTestUser(userB.id);
+    } catch {
+      /* userB was never created */
+    }
   });
 
   it("deletes an owned deck and redirects to /decks with no error", async () => {

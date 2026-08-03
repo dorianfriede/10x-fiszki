@@ -107,7 +107,13 @@ describe("review.ts GET/POST integration", () => {
   });
 
   afterAll(async () => {
-    await deleteTestUser(user.id);
+    // If beforeAll threw before assigning `user`, don't let a TypeError on
+    // `user.id` mask the original failure.
+    try {
+      await deleteTestUser(user.id);
+    } catch {
+      /* user was never created */
+    }
   });
 
   afterEach(() => {

@@ -244,10 +244,14 @@ adding the matching `.eq("deck_id", id)` to the update.
 
 **Phase 5 (client-side race, `CardListPanel`):** Bug fixed —
 `confirmDelete`'s page-back decision computed `remainingOnPage` from a
-`cards` state closure captured before the awaited delete fetch resolved;
-moved into the `setCards` functional updater so it reads state at update
-time, mirroring the already-fixed `saveEdit` edit-race pattern in the
-same file.
+`cards` state closure captured before the awaited delete fetch resolved.
+Fixed by comparing `cards.length` against a tracked
+`cardsLengthAtLastCheck` state value during render and calling `setPage`
+directly in the render body when it drops to 0 — React's "adjust state
+during render" pattern — rather than the `setCards` functional-updater
+approach originally planned, to avoid the `react-hooks/set-state-in-effect`
+lint rule. Reads `cards`/`total`/`page` as they exist in the current
+commit, so the page-back decision can't act on a stale pre-fetch snapshot.
 
 **Phase 6 (save-loss):** No bugs found — the AI-batch insert
 (`cards.ts`) is genuinely atomic (a single PostgREST `.insert(rows)`

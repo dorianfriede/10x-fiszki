@@ -67,7 +67,13 @@ describe("cards CRUD edge cases", () => {
   });
 
   afterAll(async () => {
-    await deleteTestUser(user.id);
+    // If beforeAll threw before assigning `user`, don't let a TypeError on
+    // `user.id` mask the original failure.
+    try {
+      await deleteTestUser(user.id);
+    } catch {
+      /* user was never created */
+    }
   });
 
   describe("cards/[cardId].ts PATCH/DELETE on a card outside the URL's deck", () => {

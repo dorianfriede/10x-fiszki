@@ -9,10 +9,13 @@ const noopCookies = { set: () => undefined } as unknown as AstroCookies;
 
 describe("Phase 1 auth contract: replayed cookie scopes RLS", () => {
   it("a seeded user's replayed cookie session cannot see a second user's deck", async () => {
-    const userA = await createTestUser();
-    const userB = await createTestUser();
+    let userA: Awaited<ReturnType<typeof createTestUser>> | undefined;
+    let userB: Awaited<ReturnType<typeof createTestUser>> | undefined;
 
     try {
+      userA = await createTestUser();
+      userB = await createTestUser();
+
       const authA = await getAuthenticatedRequestInit(userA);
       const clientA = createClient(new Headers({ Cookie: authA.cookieHeader }), noopCookies);
       if (!clientA) throw new Error("createClient() returned null for user A");
@@ -38,8 +41,10 @@ describe("Phase 1 auth contract: replayed cookie scopes RLS", () => {
       expect(selectError).toBeNull();
       expect(seenByB).toBeNull();
     } finally {
-      await deleteTestUser(userA.id);
-      await deleteTestUser(userB.id);
+      // Each cleanup is isolated: if creating userB threw, userA (already
+      // created) must still be cleaned up, and vice versa.
+      if (userA) await deleteTestUser(userA.id);
+      if (userB) await deleteTestUser(userB.id);
     }
   });
 });

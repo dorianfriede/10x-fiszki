@@ -96,6 +96,26 @@ is `complete`.
   reviewed-and-kept plan/implementation deviation besides what's named
   above.
 
+## Addendum: Unplanned Infra Changes (discovered during implementation)
+
+Five files needed small changes to make Vitest/Container-API tests work
+that weren't named in any phase's "Changes Required" below — recorded
+here after the fact via `/10x-impl-review` so the plan stays an accurate
+record of what shipped:
+
+- `astro.config.mjs` — gates the Cloudflare adapter behind
+  `process.env.VITEST` (Vitest's Container API can't build the Cloudflare
+  adapter, which needs bindings not present under the test runner).
+- `eslint.config.js` — adds a Node-globals override for `*.config.{js,mjs,cjs,ts}`
+  files (they run under Node directly and reference `process`).
+- `.gitignore` — adds `.env.test.local` (local-only Supabase service-role
+  key for `tests/helpers/test-auth.ts`).
+- `tests/setup.ts` — grew beyond its Phase 1 contract to add an env
+  loader for `SUPABASE_SERVICE_ROLE_KEY` plus `Uint8Array`/
+  `HTMLDialogElement` polyfills needed once jsdom component tests landed.
+- `vitest.config.ts` — gained `pool: "vmThreads"` as a jsdom/esbuild
+  `Uint8Array` workaround (Phase 5).
+
 ## Implementation Approach
 
 Bootstrap the environment first (Phase 1), since every later phase
