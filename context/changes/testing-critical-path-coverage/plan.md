@@ -674,20 +674,20 @@ no existing data is affected.
 
 #### Automated
 
-- [x] 5.1 `npm test -- card-list-panel` passes (pagination-race assertion red before fix, green after)
-- [x] 5.2 `npm run lint` passes
+- [x] 5.1 `npm test -- card-list-panel` passes (pagination-race assertion red before fix, green after) — ada7e33
+- [x] 5.2 `npm run lint` passes — ada7e33
 
 #### Manual
 
-- [x] 5.3 Manual quick-succession edit test in running app confirms no clobbering
+- [x] 5.3 Manual quick-succession edit test in running app confirms no clobbering — ada7e33
 
 ### Phase 6: Save-Loss Tests (Risk #3)
 
 #### Automated
 
-- [ ] 6.1 `npm test -- cards-batch-insert` passes
-- [ ] 6.2 `npm test -- review-reset` passes
-- [ ] 6.3 `npm run lint` passes
+- [x] 6.1 `npm test -- cards-batch-insert` passes
+- [x] 6.2 `npm test -- review-reset` passes
+- [x] 6.3 `npm run lint` passes
 
 ### Phase 7: Cookbook + test-plan.md Sync
 
