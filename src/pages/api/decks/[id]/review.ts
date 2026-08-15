@@ -143,11 +143,18 @@ export const POST: APIRoute = async (context) => {
     });
   }
 
-  const { count } = await supabase
+  const { count, error: countError } = await supabase
     .from("cards")
     .select("id", { count: "exact", head: true })
     .eq("deck_id", id)
     .lte("due", new Date().toISOString());
+
+  if (countError) {
+    return new Response(JSON.stringify({ error: countError.message }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
   return new Response(JSON.stringify({ due: updated.due, remainingDue: count ?? 0 }), {
     status: 200,
