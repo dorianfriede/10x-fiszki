@@ -30,3 +30,11 @@ pnpm-debug.log*
 
 # 10x skills
 .claude/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/.playwright-cli/
