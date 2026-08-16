@@ -28,7 +28,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | ID   | Change ID                          | Outcome (user can …)                                              | Prerequisites | PRD refs               | Status  |
 | ---- | ----------------------------------- | ------------------------------------------------------------------ | -------------- | ----------------------- | ------- |
 | F-01 | `deck-card-schema-foundation`       | (foundation) decks/cards schema + row-level isolation exist        | —               | NFR (data isolation), Access Control | done |
-| S-01 | `deck-management`                   | create, view, and delete a named deck                              | F-01            | FR-004, FR-005, FR-006  | in-progress |
+| S-01 | `deck-management`                   | create, view, and delete a named deck                              | F-01            | FR-004, FR-005, FR-006  | done |
 | S-02 | `ai-generated-flashcard-review`     | paste text, get AI-generated cards, accept/reject each into a deck | F-01, S-01      | US-01, FR-007, FR-008   | in-progress |
 | S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | in-progress |
 | S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | in-progress |
@@ -90,7 +90,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Every other slice needs a deck to target (generate into, add cards to, review). Sequenced immediately after F-01 so the north star (S-02) isn't waiting on anything avoidable.
-- **Status:** in-progress (change `impl_reviewed`, not yet archived)
+- **Status:** done
 
 ### S-02: User pastes text, generates AI flashcards, and accepts/rejects each into a deck
 
@@ -229,3 +229,4 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 (Empty on first generation. `/10x-archive` appends an entry here — and flips that item's `Status` to `done` — when a change whose `Change ID` matches the item is archived.)
 
 - **F-01: (foundation) A Supabase Postgres schema for `decks` and `cards` exists with migrations, and row-level security policies guarantee a user can only read/write their own rows.** — Archived 2026-08-16 → `context/archive/2026-07-29-deck-card-schema-foundation/`. Lesson: —.
+- **S-01: user can create a named deck, see a list of their decks, and delete a deck.** — Archived 2026-08-16 → `context/archive/2026-07-31-deck-management/`. Lesson: —.

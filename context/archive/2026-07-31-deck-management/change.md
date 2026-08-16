@@ -1,10 +1,10 @@
 ---
 change_id: deck-management
 title: Deck create, view, and delete
-status: impl_reviewed
+status: archived
 created: 2026-07-31
-updated: 2026-07-31
-archived_at: null
+updated: 2026-08-16
+archived_at: 2026-08-16T11:20:01Z
 ---
 
 ## Notes
