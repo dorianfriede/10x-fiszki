@@ -32,7 +32,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-02 | `ai-generated-flashcard-review`     | paste text, get AI-generated cards, accept/reject each into a deck | F-01, S-01      | US-01, FR-007, FR-008   | done |
 | S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | done |
 | S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | done |
-| S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | ready |
+| S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | done |
 | S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | in-progress |
 | S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | planned |
 | S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | in-progress |
@@ -140,7 +140,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - ~~Which third-party SRS service?~~ (PRD Open Question #1) → resolved 2026-08-01: self-hosted `ts-fsrs` (FSRS v6), not a hosted third-party API. Rating scale is FSRS's native 4-button scale (Again/Hard/Good/Easy), so FR-014's review UI can now be finalized against that contract. Full research and rationale: `context/changes/spaced-repetition-review-session/srs-library-research.md`.
 - **Risk:** Was genuinely blocked on an external decision; resolved by choosing a self-hosted library instead of a hosted vendor, which also sidesteps the early-access/pricing risk of the one hosted option found (SuperMemo API).
-- **Status:** ready
+- **Status:** done
 
 ### S-06: User has bulk actions during candidate review and can reset a review session
 
@@ -233,3 +233,4 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 - **S-02: user can paste study text, trigger AI generation for a selected deck, see generated card proposals, and accept or reject each before it's saved.** — Archived 2026-08-16 → `context/archive/2026-08-01-ai-generated-flashcard-review/`. Lesson: —.
 - **S-03: user can manually create a flashcard (front and back) within a deck.** — Archived 2026-08-16 → `context/archive/2026-08-01-manual-flashcard-creation/`. Lesson: —.
 - **S-04: user can browse all cards in a deck, edit a card's front/back, and delete a card.** — Archived 2026-08-16 → `context/archive/2026-08-01-card-browsing-and-editing/`. Lesson: —.
+- **S-05: user can start a review session for a deck and rate their recall on each card; scheduling is computed by the `ts-fsrs` library, self-hosted in our own Astro API routes (not delegated to an external hosted SRS service — see decision below).** — Archived 2026-08-16 → `context/archive/2026-08-01-spaced-repetition-review-session/`. Lesson: —.
