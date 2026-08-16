@@ -34,7 +34,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | done |
 | S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | done |
 | S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | done |
-| S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | planned |
+| S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | done |
 | S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | in-progress |
 | S-09 | `integration-test-type-fixes`        | (cross-cutting, tech debt) `tsc --noEmit` passes cleanly so a typecheck quality gate (local hook or CI) can be trusted | —               | — (not in PRD v1)       | planned |
 
@@ -164,7 +164,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Depends on every other slice's UI existing first, since there's nothing to polish otherwise — sequenced last among current slices by design.
-- **Status:** planned
+- **Status:** done
 
 ### S-08: User can delete their account with a 30-day retention window
 
@@ -235,3 +235,4 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 - **S-04: user can browse all cards in a deck, edit a card's front/back, and delete a card.** — Archived 2026-08-16 → `context/archive/2026-08-01-card-browsing-and-editing/`. Lesson: —.
 - **S-05: user can start a review session for a deck and rate their recall on each card; scheduling is computed by the `ts-fsrs` library, self-hosted in our own Astro API routes (not delegated to an external hosted SRS service — see decision below).** — Archived 2026-08-16 → `context/archive/2026-08-01-spaced-repetition-review-session/`. Lesson: —.
 - **S-06: user can select multiple AI-generated candidate cards during the S-02 review step and accept/reject them as a batch, and can reset an in-progress spaced-repetition review session (S-05) back to its starting state instead of abandoning it.** — Archived 2026-08-16 → `context/archive/2026-08-02-ux-improvements/`. Lesson: —.
+- **S-07: (cross-cutting) user experiences a visually refined, consistent UI across every existing screen (decks, generation/review, manual creation, card browsing, review session) — no new functional capability, purely presentation.** — Archived 2026-08-16 → `context/archive/2026-08-02-ui-polish/`. Lesson: —.
