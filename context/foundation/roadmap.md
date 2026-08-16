@@ -36,7 +36,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | done |
 | S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | done |
 | S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | done |
-| S-09 | `integration-test-type-fixes`        | (cross-cutting, tech debt) `tsc --noEmit` passes cleanly so a typecheck quality gate (local hook or CI) can be trusted | —               | — (not in PRD v1)       | planned |
+| S-09 | `integration-test-type-fixes`        | (cross-cutting, tech debt) `tsc --noEmit` passes cleanly so a typecheck quality gate (local hook or CI) can be trusted | —               | — (not in PRD v1)       | done |
 
 ## Streams
 
@@ -189,7 +189,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** All 12 errors share one root cause — `container.renderToResponse(RouteModule, {...})` doesn't type-check because Astro's Container API types don't recognize endpoint route modules as `AstroComponentFactory`, even though `routeType: "endpoint"` handles them correctly at runtime. The fix is the same `as unknown as AstroComponentFactory`-style cast already used for `noopCookies` in these same files (`review.test.ts`, `deck-delete.test.ts`, `cards-crud.test.ts`, `cards-batch-insert.test.ts`) — low risk, no logic changes.
-- **Status:** planned
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -237,3 +237,4 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 - **S-06: user can select multiple AI-generated candidate cards during the S-02 review step and accept/reject them as a batch, and can reset an in-progress spaced-repetition review session (S-05) back to its starting state instead of abandoning it.** — Archived 2026-08-16 → `context/archive/2026-08-02-ux-improvements/`. Lesson: —.
 - **S-07: (cross-cutting) user experiences a visually refined, consistent UI across every existing screen (decks, generation/review, manual creation, card browsing, review session) — no new functional capability, purely presentation.** — Archived 2026-08-16 → `context/archive/2026-08-02-ui-polish/`. Lesson: —.
 - **S-08: user can request account deletion; the account and its data (decks, cards, review history) are retained for 30 days before permanent purge, giving the user a window to reverse the request.** — Archived 2026-08-16 → `context/archive/2026-08-02-account-deletion/`. Lesson: —.
+- **S-09: (cross-cutting, tech debt) The 12 pre-existing `tsc --noEmit` errors in `tests/integration/*.test.ts` are fixed, so a typecheck quality gate (per-edit hook, pre-commit, pre-push, or CI) reports real regressions instead of always failing on unrelated pre-existing errors.** — Archived 2026-08-16 → `context/archive/2026-08-03-integration-test-type-fixes/`. Lesson: —.
