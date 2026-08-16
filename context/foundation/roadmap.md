@@ -3,7 +3,7 @@ project: "10xFiszki"
 version: 1
 status: draft
 created: 2026-07-28
-updated: 2026-08-01
+updated: 2026-08-16
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -27,7 +27,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 
 | ID   | Change ID                          | Outcome (user can …)                                              | Prerequisites | PRD refs               | Status  |
 | ---- | ----------------------------------- | ------------------------------------------------------------------ | -------------- | ----------------------- | ------- |
-| F-01 | `deck-card-schema-foundation`       | (foundation) decks/cards schema + row-level isolation exist        | —               | NFR (data isolation), Access Control | in-progress |
+| F-01 | `deck-card-schema-foundation`       | (foundation) decks/cards schema + row-level isolation exist        | —               | NFR (data isolation), Access Control | done |
 | S-01 | `deck-management`                   | create, view, and delete a named deck                              | F-01            | FR-004, FR-005, FR-006  | in-progress |
 | S-02 | `ai-generated-flashcard-review`     | paste text, get AI-generated cards, accept/reject each into a deck | F-01, S-01      | US-01, FR-007, FR-008   | in-progress |
 | S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | in-progress |
@@ -76,7 +76,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** — (PRD Open Question #3, deck deletion behavior, resolved during roadmap generation: deleting a deck cascade-deletes its cards and their SRS scheduling state. The cards table's foreign key should be defined accordingly.)
 - **Risk:** Every downstream slice needs this schema to persist real data — sequencing it first avoids retrofitting isolation policies after slices are already built against an ad-hoc shape.
-- **Status:** in-progress (change `impl_reviewed`, not yet archived)
+- **Status:** done
 
 ## Slices
 
@@ -227,3 +227,5 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 ## Done
 
 (Empty on first generation. `/10x-archive` appends an entry here — and flips that item's `Status` to `done` — when a change whose `Change ID` matches the item is archived.)
+
+- **F-01: (foundation) A Supabase Postgres schema for `decks` and `cards` exists with migrations, and row-level security policies guarantee a user can only read/write their own rows.** — Archived 2026-08-16 → `context/archive/2026-07-29-deck-card-schema-foundation/`. Lesson: —.
