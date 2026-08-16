@@ -35,7 +35,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | done |
 | S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | done |
 | S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | done |
-| S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | in-progress |
+| S-08 | `account-deletion`                   | delete their account, data retained 30 days before permanent purge  | F-01            | — (not in PRD v1)       | done |
 | S-09 | `integration-test-type-fixes`        | (cross-cutting, tech debt) `tsc --noEmit` passes cleanly so a typecheck quality gate (local hook or CI) can be trusted | —               | — (not in PRD v1)       | planned |
 
 ## Streams
@@ -177,7 +177,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Where the 30-day countdown/purge job runs (cron, Cloudflare scheduled worker, manual admin trigger) is undecided. Owner: user. Block: no (schema/UI can be built against a `deleted_at` timestamp regardless of purge mechanism).
 - **Risk:** Introduces a scheduled/background deletion mechanism not present anywhere else in the codebase — the purge job is new infrastructure, not just a new screen.
-- **Status:** in-progress (change `impl_reviewed`, not yet archived)
+- **Status:** done
 
 ### S-09: `tsc --noEmit` passes cleanly (integration test type fixes)
 
@@ -236,3 +236,4 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 - **S-05: user can start a review session for a deck and rate their recall on each card; scheduling is computed by the `ts-fsrs` library, self-hosted in our own Astro API routes (not delegated to an external hosted SRS service — see decision below).** — Archived 2026-08-16 → `context/archive/2026-08-01-spaced-repetition-review-session/`. Lesson: —.
 - **S-06: user can select multiple AI-generated candidate cards during the S-02 review step and accept/reject them as a batch, and can reset an in-progress spaced-repetition review session (S-05) back to its starting state instead of abandoning it.** — Archived 2026-08-16 → `context/archive/2026-08-02-ux-improvements/`. Lesson: —.
 - **S-07: (cross-cutting) user experiences a visually refined, consistent UI across every existing screen (decks, generation/review, manual creation, card browsing, review session) — no new functional capability, purely presentation.** — Archived 2026-08-16 → `context/archive/2026-08-02-ui-polish/`. Lesson: —.
+- **S-08: user can request account deletion; the account and its data (decks, cards, review history) are retained for 30 days before permanent purge, giving the user a window to reverse the request.** — Archived 2026-08-16 → `context/archive/2026-08-02-account-deletion/`. Lesson: —.
