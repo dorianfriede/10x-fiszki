@@ -1,10 +1,10 @@
 ---
 change_id: ai-generated-flashcard-review
 title: AI-generated flashcard review (north star)
-status: impl_reviewed
+status: archived
 created: 2026-08-01
-updated: 2026-08-01
-archived_at: null
+updated: 2026-08-16
+archived_at: 2026-08-16T11:22:11Z
 ---
 
 ## Notes
