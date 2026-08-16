@@ -31,7 +31,7 @@ Manual flashcard creation is slow enough that people abandon spaced repetition e
 | S-01 | `deck-management`                   | create, view, and delete a named deck                              | F-01            | FR-004, FR-005, FR-006  | done |
 | S-02 | `ai-generated-flashcard-review`     | paste text, get AI-generated cards, accept/reject each into a deck | F-01, S-01      | US-01, FR-007, FR-008   | done |
 | S-03 | `manual-flashcard-creation`         | manually create a flashcard (front/back) in a deck                 | F-01, S-01      | FR-009                  | done |
-| S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | in-progress |
+| S-04 | `card-browsing-and-editing`         | browse, edit, and delete cards in a deck                           | F-01, S-01      | FR-010, FR-011, FR-012  | done |
 | S-05 | `spaced-repetition-review-session`  | start a review session and rate recall per card                    | F-01, S-01      | FR-013, FR-014          | ready |
 | S-06 | `ux-improvements`                   | bulk accept/reject candidates during AI review; reset an in-progress review session | F-01            | — (not in PRD v1)       | in-progress |
 | S-07 | `ui-polish`                          | (cross-cutting) experience a visually polished UI across all existing screens | F-01, S-01, S-02, S-03, S-04, S-05 | — (not in PRD v1) | planned |
@@ -127,7 +127,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Only needs the schema and a deck to exist, not a specific card-creation path — can proceed in parallel with S-02/S-03 rather than waiting for either to finish.
-- **Status:** in-progress (change `impl_reviewed`, not yet archived)
+- **Status:** done
 
 ### S-05: User can run a spaced-repetition review session
 
@@ -232,3 +232,4 @@ None currently open at the cross-cutting level — all three of the PRD's `## Op
 - **S-01: user can create a named deck, see a list of their decks, and delete a deck.** — Archived 2026-08-16 → `context/archive/2026-07-31-deck-management/`. Lesson: —.
 - **S-02: user can paste study text, trigger AI generation for a selected deck, see generated card proposals, and accept or reject each before it's saved.** — Archived 2026-08-16 → `context/archive/2026-08-01-ai-generated-flashcard-review/`. Lesson: —.
 - **S-03: user can manually create a flashcard (front and back) within a deck.** — Archived 2026-08-16 → `context/archive/2026-08-01-manual-flashcard-creation/`. Lesson: —.
+- **S-04: user can browse all cards in a deck, edit a card's front/back, and delete a card.** — Archived 2026-08-16 → `context/archive/2026-08-01-card-browsing-and-editing/`. Lesson: —.
