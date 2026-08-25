@@ -10,28 +10,32 @@ export const reviewResultSchema = z.object({
     .max(10)
     .describe(
       scale(
-        "Implementation correctness",
-        "the change is broken or does not do what it claims",
-        "the logic is fully correct",
+        "Implementation correctness & edge-case safety",
+        "the change is broken, contradicts what it claims to do, or leaves visible edge cases (null/undefined, empty collections, unhandled error branches) unhandled",
+        "the logic is fully correct and every edge case visible in the diff is handled",
       ),
     ),
-  idiomaticity: z
+  typeSafetyCompliance: z
     .number()
     .min(1)
     .max(10)
     .describe(
       scale(
-        "Idiomatic style",
-        "the code fights the language/framework/codebase conventions",
-        "it reads as if a senior maintainer of this codebase wrote it",
+        "Type safety & static-analysis compliance",
+        "the diff introduces `any`, unjustified `@ts-ignore`/`eslint-disable`, non-null assertions used to silence errors, or unused vars/params",
+        "fully typed with no escape hatches; would pass strict type-checked linting as-is",
       ),
     ),
-  complexity: z
+  securityDataAccessSafety: z
     .number()
     .min(1)
     .max(10)
     .describe(
-      scale("Complexity", "needlessly complex or over-engineered for what it does", "as simple as the problem allows"),
+      scale(
+        "Security & data-access boundary safety",
+        "the diff leaks a secret, is missing an auth/ownership check on a mutating path, or passes unvalidated external input into a query, shell command, or rendered output",
+        "no security or unsafe-data-handling concerns; all external input is validated and access is properly scoped",
+      ),
     ),
   testRiskCoverage: z
     .number()
@@ -39,20 +43,20 @@ export const reviewResultSchema = z.object({
     .max(10)
     .describe(
       scale(
-        "Test risk coverage",
+        "Test coverage for introduced risk",
         "risky behavior changes ship with no meaningful test coverage",
-        "the changed behavior is well covered by tests",
+        "the changed behavior is well covered by tests at the appropriate level",
       ),
     ),
-  securitySafety: z
+  conventionConsistency: z
     .number()
     .min(1)
     .max(10)
     .describe(
       scale(
-        "Security & safety",
-        "the diff introduces a serious vulnerability or unsafe handling of data",
-        "no security or safety concerns",
+        "Convention consistency (idiomaticity)",
+        "the code fights or duplicates the language/framework/codebase's established conventions and patterns instead of reusing them",
+        "it reads as if a senior maintainer of this codebase wrote it, consistently reusing existing patterns",
       ),
     ),
   verdict: z
