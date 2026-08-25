@@ -1,10 +1,5 @@
 import process from "node:process";
-import { ToolLoopAgent, isStepCount, Output } from "ai";
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { reviewResultSchema } from "./schema.ts";
-import { SYSTEM_PROMPT } from "./prompt.ts";
-
-const MODEL = "nvidia/nemotron-3-super-120b-a12b:free";
+import { reviewDiff } from "./agent.ts";
 
 async function readStdin(): Promise<string> {
   const chunks: Buffer[] = [];
@@ -33,20 +28,7 @@ async function main() {
     process.exit(1);
   }
 
-  const openrouter = createOpenRouter({ apiKey });
-
-  const reviewer = new ToolLoopAgent({
-    model: openrouter(MODEL),
-    instructions: SYSTEM_PROMPT,
-    output: Output.object({ schema: reviewResultSchema }),
-    stopWhen: isStepCount(2),
-  });
-
-  const result = await reviewer.generate({
-    prompt: `Review the following diff:\n\n${diff}`,
-  });
-
-  const review = reviewResultSchema.parse(result.output);
+  const review = await reviewDiff(diff);
   console.log(JSON.stringify(review, null, 2));
 }
 
