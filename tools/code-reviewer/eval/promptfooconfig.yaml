@@ -1,0 +1,44 @@
+providers:
+  - id: file://./promptfoo-provider.ts
+    label: nemotron-3-super-120b (default)
+    config:
+      model: nvidia/nemotron-3-super-120b-a12b:free
+  - id: file://./promptfoo-provider.ts
+    label: nemotron-3-ultra (free)
+    config:
+      model: nvidia/nemotron-3-ultra-550b-a55b:free
+  - id: file://./promptfoo-provider.ts
+    label: nemotron-3-nano-omni (free)
+    config:
+      model: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
+
+prompts:
+  - "{{diff}}"
+
+defaultTest:
+  options:
+    provider: openrouter:dots-studio/dots-3-note-preview:free
+
+tests:
+  - vars:
+      diff: file://./fixtures/user-search-form-migration.diff
+    assert:
+      - type: javascript
+        value: "output.verdict === 'fail'"
+      - type: llm-rubric
+        transform: output.summary
+        value: >-
+          The review identifies that `defaultProps` was left on the migrated function component,
+          which React 19 silently ignores, leaving `pageSize` undefined when a caller omits it.
+      - type: llm-rubric
+        transform: output.summary
+        value: >-
+          The review identifies that the `propTypes` declaration on `onResults` no longer provides
+          any runtime or dev-time safety in React 19, so a missing `onResults` prop will crash instead
+          of warn.
+      - type: llm-rubric
+        transform: output.summary
+        value: >-
+          The review identifies that the test covering search-on-change behavior was disabled
+          (`.skip`) instead of migrated off the removed `react-dom/test-utils`, silently dropping
+          coverage.

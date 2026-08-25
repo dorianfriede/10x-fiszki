@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "db:types": "supabase gen types typescript --linked > src/db/database.types.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "eval:code-reviewer": "promptfoo eval -c tools/code-reviewer/eval/promptfooconfig.yaml"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
