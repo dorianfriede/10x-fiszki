@@ -269,24 +269,24 @@ Not applicable — no persisted data or existing consumers of `tools/code-review
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run lint` reports no new errors on `tools/code-reviewer/*.ts`
-- [x] 1.2 `npx astro check` (or equivalent project type-check) passes with no new errors
+- [x] 1.1 Type checking passes: `npm run lint` reports no new errors on `tools/code-reviewer/*.ts` — b8a5b10
+- [x] 1.2 `npx astro check` (or equivalent project type-check) passes with no new errors — b8a5b10
 
 #### Manual
 
-- [x] 1.3 CLI against a real small diff still produces the same JSON shape as before the refactor
-- [x] 1.4 Missing `OPENROUTER_API_KEY` still prints the original message and exits 1
+- [x] 1.3 CLI against a real small diff still produces the same JSON shape as before the refactor — b8a5b10
+- [x] 1.4 Missing `OPENROUTER_API_KEY` still prints the original message and exits 1 — b8a5b10
 
 ### Phase 2: Author the fixture diff and the promptfoo provider
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run lint` reports no new errors on the new `eval/` files
-- [ ] 2.2 Fixture diff is syntactically valid: `git apply --stat tools/code-reviewer/eval/fixtures/user-search-form-migration.diff` parses without error
+- [x] 2.1 Type checking passes: `npm run lint` reports no new errors on the new `eval/` files
+- [x] 2.2 Fixture diff is syntactically valid: `git apply --stat tools/code-reviewer/eval/fixtures/user-search-form-migration.diff` parses without error
 
 #### Manual
 
-- [ ] 2.3 Each of the 3 flaws is present, realistic, and independently identifiable in the fixture diff
+- [x] 2.3 Each of the 3 flaws is present, realistic, and independently identifiable in the fixture diff
 
 ### Phase 3: Wire the promptfoo configuration
 
