@@ -296,5 +296,5 @@ Not applicable — no persisted data or existing consumers of `tools/code-review
 
 #### Manual
 
-- [x] 3.2 Promptfoo report's judge rationale reads sensibly on manual spot-check
+- [x] 3.2 Promptfoo report's judge rationale reads sensibly on manual spot-check — 23b5804
 - [ ] 3.3 CLI still works end-to-end against a real diff after all three phases
