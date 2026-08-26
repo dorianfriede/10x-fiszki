@@ -1,7 +1,7 @@
 import { OPENROUTER_API_KEY } from "astro:env/server";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "z-ai/glm-5.2:free";
+const MODEL = "nvidia/nemotron-3-super-120b-a12b:free";
 // The free-tier model emits a lengthy internal reasoning chain before its answer, which can push
 // total response time (including body streaming) well past a header-only timeout.
 const REQUEST_TIMEOUT_MS = 45_000;
